@@ -1,18 +1,26 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h2>Lol, and you thought I would have more than this done</h2>
   </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+
 
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
+  components: {  },
+  beforeMount(){
+    const router = useRouter()
+    router.push({name: 'Habits'})
   }
 }
 </script>
+
+<style>
+.home{
+  margin: 20px;
+}
+</style>

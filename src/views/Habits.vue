@@ -6,13 +6,27 @@
       v-for="(habit, index) in document.habits"
       :key="habit.name"
     >
-      <Habit :habit="habit"
-      @toggle="() => {toggleShowEdit(habit)}" 
-      @delete="() => {handleHabitDelete(index)}" 
-      @checkoff="() => {handleCheckoff(index)}" />
+      <Habit
+        :habit="habit"
+        @toggle="
+          () => {
+            toggleShowEdit(habit);
+          }
+        "
+        @delete="
+          () => {
+            handleHabitDelete(index);
+          }
+        "
+        @checkoff="
+          () => {
+            handleCheckoff(index);
+          }
+        "
+      />
     </div>
   </div>
-  <div v-else>Loading...</div>
+  <div v-if="!document && !error">Loading...</div>
   <i
     v-if="!showForm"
     @click="showForm = !showForm"
@@ -34,11 +48,12 @@
 </template>
 
 <script>
-import Habit from "@/components/Habit.vue"
+import Habit from "@/components/Habit.vue";
 import getUser from "@/composables/getUser";
 import getDocument from "@/composables/getDocument";
 import useDocument from "@/composables/useDocument";
 import { ref } from "vue";
+
 //import getCollection from "@/composables/getCollection";
 
 export default {
@@ -50,7 +65,6 @@ export default {
     const showForm = ref(false);
     const newHabitName = ref("");
 
-    
     const { document, error } = getDocument("users", user.value.uid);
     const { deleteDoc, updateDoc, isPending, error: useError } = useDocument(
       "users",
@@ -59,11 +73,30 @@ export default {
 
     const handleCheckoff = async (i) => {
       const habit = document.value.habits[i];
-      const newHabit = {
-        name: habit.name,
-        complete: !habit.complete,
-        showEditButtons: false,
-      };
+      let newHabit = null;
+      if (!habit.complete) {
+        newHabit = {
+          name: habit.name,
+          complete: !habit.complete,
+          stats: {
+            streak: habit.stats.streak += 1,
+            timesCompleted: [...habit.stats.timesCompleted, Date.now()],
+          },        
+          showEditButtons: false,
+        };
+      }
+      else {
+        let newTimesCompleted = habit.stats.timesCompleted.splice(0,-1);
+        newHabit = {
+          name: habit.name,
+          complete: !habit.complete,
+          stats: {
+            streak: habit.stats.streak -= 1,
+            timesCompleted: [...newTimesCompleted]
+          },
+          showEditButtons: false,
+        };
+      }
       let habits = document.value.habits;
       habits[i] = newHabit;
 
@@ -76,14 +109,18 @@ export default {
     };
 
     const toggleShowEdit = (habit) => {
-        habit.showEditButtons = !habit.showEditButtons;
-        console.log(habit.showEditButtons)
-      }
+      habit.showEditButtons = !habit.showEditButtons;
+      console.log(habit.showEditButtons);
+    };
 
     const createNewHabit = async () => {
       const newHabit = {
         name: newHabitName.value,
         complete: false,
+        stats: {
+          streak: 0,
+          timesCompleted: []
+        },
         showEditButtons: false,
       };
       clearNewHabit();
@@ -92,16 +129,15 @@ export default {
     };
 
     const handleHabitDelete = async (i) => {
-        if (confirm("Deleting a habit is permanent and cannot be undone. Continue?")){
-            console.log('deleting now...')
-            let habits = document.value.habits
-            habits.splice(i, 1)
-            await updateDoc({habits: [...habits]})
-        }
-        else(
-            document.value.habits[i].showEditButtons = false
-        )
-    }
+      if (
+        confirm("Deleting a habit is permanent and cannot be undone. Continue?")
+      ) {
+        console.log("deleting now...");
+        let habits = document.value.habits;
+        habits.splice(i, 1);
+        await updateDoc({ habits: [...habits] });
+      } else document.value.habits[i].showEditButtons = false;
+    };
 
     return {
       user,

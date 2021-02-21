@@ -7,3 +7,10 @@ const functions = require('firebase-functions');
 //   functions.logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+
+
+exports.newUserSignup = functions.auth.user().onCreate((user) => {
+    return admin.firestore().collection('users').doc(user.uid).set({
+        habits: []
+    });
+});

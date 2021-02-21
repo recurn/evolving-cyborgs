@@ -8,6 +8,8 @@
 .content {
   max-width: 1200px;
   margin: 0 auto;
+  margin-bottom: 40px;
+  min-height: calc(100vh - 120px);
 }
 
 button, .btn{
@@ -52,4 +54,14 @@ input, textarea {
 button:hover, .btn:hover{
     background: var(--primary-light);
     color: white;
+}
+footer{
+    height: 50px;
+    overflow: show;
+    padding: 25px;
+    padding-bottom: 40px;
+    background: var(--primary);
+}
+footer p{
+    align-self: center;
 }

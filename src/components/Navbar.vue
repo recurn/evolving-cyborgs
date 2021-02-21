@@ -4,6 +4,7 @@
       <router-link :to="{ name: 'Home' }" class="home-set">
         <img class='home-icon' src="@/assets/001-cyborg.png" />
         <h1>Evolving Cyborgs</h1>
+
       </router-link>
       <div class="buttons">
         <div v-if="user">
@@ -55,17 +56,19 @@ nav {
   max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 20px;
+  justify-content: space-between;
 }
 
 .buttons {
   margin-left: auto;
+  display: inline-block;
 }
 button, .btn{
     background: white;
     border: 0px;
-    padding: 10px;
+    padding: 8px 8px;
     border-radius: 12px;
-    margin: 0 10px;
+    margin: 10px 5px;
     color: black;
     font-size: 15px;
 }
@@ -78,5 +81,10 @@ button, .btn{
 }
 .home-set h1 {
     margin-left: 20px;
+}
+.username {
+  margin: 10px;
+  display: inline-block;
+  align-items: center;
 }
 </style>

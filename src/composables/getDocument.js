@@ -13,7 +13,7 @@ const getDocument = (collection, id) => {
     const unsub = documentRef.onSnapshot((doc) => {
         if(doc.data()){
             document.value = {...doc.data(), id: doc.id}
-            console.log(document.value)
+            //console.log(document.value)
             error.value = null
         }
         else{

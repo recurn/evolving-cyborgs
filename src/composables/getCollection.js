@@ -9,7 +9,6 @@ const getCollection = (collection, query) => {
     
 
     let collectionRef = projectFirestore.collection(collection)
-        .orderBy('createdAt')
 
     if(query){
         collectionRef = collectionRef.where(...query)
@@ -19,7 +18,7 @@ const getCollection = (collection, query) => {
         let results = []
         snap.docs.forEach((doc) => {
             // wait for the server to create the doc if it does not exist
-            doc.data().createdAt && results.push({...doc.data(), id: doc.id})
+            doc.data() && results.push({...doc.data(), id: doc.id})
         })
 
         documents.value = results

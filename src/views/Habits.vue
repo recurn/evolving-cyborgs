@@ -1,9 +1,9 @@
 <template>
   <div v-if="error">{{ error }}</div>
-  <div v-if="document">
+  <div v-if="habits">
     <div
       class="habit-container"
-      v-for="(habit, index) in document.habits"
+      v-for="(habit, index) in habits"
       :key="habit.name"
     >
       <Habit
@@ -20,7 +20,7 @@
         "
         @checkoff="
           () => {
-            handleCheckoff(index);
+            handleCheckoff(habit);
           }
         "
       />
@@ -50,11 +50,10 @@
 <script>
 import Habit from "@/components/Habit.vue";
 import getUser from "@/composables/getUser";
-import getDocument from "@/composables/getDocument";
 import useDocument from "@/composables/useDocument";
-import { ref } from "vue";
-
-//import getCollection from "@/composables/getCollection";
+import getCollection from "@/composables/getCollection"
+import useCollection from "@/composables/useCollection"
+import {  ref } from "vue";
 
 export default {
   components: {
@@ -65,42 +64,43 @@ export default {
     const showForm = ref(false);
     const newHabitName = ref("");
 
-    const { document, error } = getDocument("users", user.value.uid);
+    const {documents:habits , error} = getCollection("users/" + user.value.uid + "/habits")
+
     const { deleteDoc, updateDoc, isPending, error: useError } = useDocument(
       "users",
       user.value.uid
     );
 
-    const handleCheckoff = async (i) => {
-      const habit = document.value.habits[i];
+    const handleCheckoff = async (habit) => {
+      console.log(habit)
+
+      const {updateDoc} = useDocument("users/" + user.value.uid + "/habits", habit.id)
       let newHabit = null;
-      if (!habit.complete) {
+      if (habit.status == 0) {
         newHabit = {
           name: habit.name,
-          complete: !habit.complete,
+          status: 1,
           stats: {
             streak: habit.stats.streak += 1,
-            timesCompleted: [...habit.stats.timesCompleted, Date.now()],
+            history: [...habit.stats.history, Date.now()],
           },        
           showEditButtons: false,
         };
       }
       else {
-        let newTimesCompleted = habit.stats.timesCompleted.splice(0,-1);
+        let newhistory = habit.stats.history.splice(0,-1);
         newHabit = {
           name: habit.name,
-          complete: !habit.complete,
+          status: 0,
           stats: {
             streak: habit.stats.streak -= 1,
-            timesCompleted: [...newTimesCompleted]
+            history: [...newhistory]
           },
           showEditButtons: false,
         };
       }
-      let habits = document.value.habits;
-      habits[i] = newHabit;
 
-      await updateDoc({ habits: habits });
+      await updateDoc(newHabit);
     };
 
     const clearNewHabit = () => {
@@ -110,29 +110,29 @@ export default {
 
     const toggleShowEdit = (habit) => {
       habit.showEditButtons = !habit.showEditButtons;
-      console.log(habit.showEditButtons);
     };
 
     const createNewHabit = async () => {
+      console.log(habits.value)
       const newHabit = {
         name: newHabitName.value,
-        complete: false,
+        status: 0,
         stats: {
           streak: 0,
-          timesCompleted: []
+          history: []
         },
         showEditButtons: false,
       };
       clearNewHabit();
-      const habits = document.value.habits;
-      await updateDoc({ habits: [...habits, newHabit] });
+
+      const {addDoc} = useCollection("users/" + user.value.uid + "/habits")
+      await addDoc({...newHabit})
     };
 
     const handleHabitDelete = async (i) => {
       if (
         confirm("Deleting a habit is permanent and cannot be undone. Continue?")
       ) {
-        console.log("deleting now...");
         let habits = document.value.habits;
         habits.splice(i, 1);
         await updateDoc({ habits: [...habits] });
@@ -154,6 +154,7 @@ export default {
       createNewHabit,
       handleHabitDelete,
       toggleShowEdit,
+      habits,
     };
   },
 };

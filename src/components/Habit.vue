@@ -19,13 +19,13 @@
 
         <div class="habit-bottom">
           <i
-            v-if="habit.complete"
+            v-if="habit.status == 1"
             class="material-icons habit-checkbox"
             @click="$emit('checkoff')"
             >check_box</i
           >
           <i
-            v-if="!habit.complete"
+            v-if="habit.status == 0"
             class="material-icons habit-checkbox"
             @click="$emit('checkoff')"
             >check_box_outline_blank</i

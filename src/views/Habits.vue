@@ -51,9 +51,10 @@
 import Habit from "@/components/Habit.vue";
 import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
-import getCollection from "@/composables/getCollection"
-import useCollection from "@/composables/useCollection"
-import {  ref } from "vue";
+import getCollection from "@/composables/getCollection";
+import useCollection from "@/composables/useCollection";
+import { onBeforeUpdate, ref } from "vue";
+//import {timestamp} from "@/firebase/config"
 
 export default {
   components: {
@@ -64,37 +65,81 @@ export default {
     const showForm = ref(false);
     const newHabitName = ref("");
 
-    const {documents:habits , error} = getCollection("users/" + user.value.uid + "/habits")
+    const { documents: habits, error } = getCollection(
+      "users/" + user.value.uid + "/habits"
+    );
 
     const { deleteDoc, updateDoc, isPending, error: useError } = useDocument(
       "users",
       user.value.uid
     );
 
-    const handleCheckoff = async (habit) => {
-      console.log(habit)
+    const resetHabits = onBeforeUpdate(() => {
+      if (habits.value) {
+        return habits.value.map((habit) => {
+          let history = habit.stats.history;
+          if (history.length > 0) {
+            let date = new Date(history[history.length - 1].time);
+            let day_1 = new Date(date)
+            day_1.setHours(0,0,0,0);
+            day_1.setDate(date.getDate() + 1);
 
-      const {updateDoc} = useDocument("users/" + user.value.uid + "/habits", habit.id)
+            let day_2 = new Date(date)
+            day_2.setHours(0,0,0,0)
+            day_2.setDate(date.getDate() + 2);
+
+            let now = new Date();
+            now.setHours(0,0,0,0)
+            if (now.getTime() >= day_2.getTime()) {
+              console.log("2 day", habit)
+              let newHabit = habit;
+              newHabit.stats.streak = 0;
+              newHabit.status = 0;
+              return {...newHabit};
+            }
+            else if (now.getTime() >= day_1.getTime()){
+              console.log("1 day", habit)
+              let newHabit = habit;
+              newHabit.status = 0;
+              return {...habit, status: 0};
+            }
+            else {
+              console.log("no days", habit)
+              return habit;
+            }
+          }
+        });
+      }
+    });
+
+    const handleCheckoff = async (habit) => {
+      const { updateDoc } = useDocument(
+        "users/" + user.value.uid + "/habits",
+        habit.id
+      );
+
       let newHabit = null;
       if (habit.status == 0) {
         newHabit = {
           name: habit.name,
           status: 1,
           stats: {
-            streak: habit.stats.streak += 1,
-            history: [...habit.stats.history, Date.now()],
-          },        
+            streak: (habit.stats.streak += 1),
+            history: [
+              ...habit.stats.history,
+              { status: 1, time: new Date().toString() },
+            ],
+          },
           showEditButtons: false,
         };
-      }
-      else {
-        let newhistory = habit.stats.history.splice(0,-1);
+      } else {
+        let newhistory = habit.stats.history.slice(0, -1);
         newHabit = {
           name: habit.name,
           status: 0,
           stats: {
-            streak: habit.stats.streak -= 1,
-            history: [...newhistory]
+            streak: (habit.stats.streak -= 1),
+            history: [...newhistory],
           },
           showEditButtons: false,
         };
@@ -113,30 +158,34 @@ export default {
     };
 
     const createNewHabit = async () => {
-      console.log(habits.value)
+      console.log(habits.value);
       const newHabit = {
         name: newHabitName.value,
         status: 0,
         stats: {
           streak: 0,
-          history: []
+          history: [],
         },
         showEditButtons: false,
       };
       clearNewHabit();
 
-      const {addDoc} = useCollection("users/" + user.value.uid + "/habits")
-      await addDoc({...newHabit})
+      const { addDoc } = useCollection("users/" + user.value.uid + "/habits");
+      await addDoc({ ...newHabit });
     };
 
-    const handleHabitDelete = async (i) => {
+    const handleHabitDelete = async (habit) => {
       if (
         confirm("Deleting a habit is permanent and cannot be undone. Continue?")
       ) {
-        let habits = document.value.habits;
-        habits.splice(i, 1);
-        await updateDoc({ habits: [...habits] });
-      } else document.value.habits[i].showEditButtons = false;
+        const { deleteDoc } = useDocument(
+        "users/" + user.value.uid + "/habits",
+        habit.id
+      );
+      console.log("deleting...")
+        await deleteDoc();
+        
+      } else habit.showEditButtons = false;
     };
 
     return {
@@ -155,6 +204,7 @@ export default {
       handleHabitDelete,
       toggleShowEdit,
       habits,
+      resetHabits,
     };
   },
 };

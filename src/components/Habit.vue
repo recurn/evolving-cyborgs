@@ -17,6 +17,10 @@
           >
         </div>
 
+        <div class="streak">
+          <p>{{habit.stats.streak}}</p>
+        </div>
+
         <div class="habit-bottom">
           <i
             v-if="habit.status == 1"

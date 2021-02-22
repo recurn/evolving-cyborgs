@@ -3,7 +3,7 @@
   <div v-if="habits">
     <div
       class="habit-container"
-      v-for="(habit, index) in habits"
+      v-for="(habit) in habits"
       :key="habit.name"
     >
       <Habit
@@ -15,7 +15,7 @@
         "
         @delete="
           () => {
-            handleHabitDelete(index);
+            handleHabitDelete(habit);
           }
         "
         @checkoff="

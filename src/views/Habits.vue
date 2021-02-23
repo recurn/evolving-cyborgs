@@ -102,7 +102,7 @@ export default {
               console.log("no days", habit);
               return habit;
             }
-
+            newHabit.stats.score = getUpdatedscore(newHabit);
             updateDoc(newHabit);
             return { ...newHabit };
           }
@@ -157,7 +157,7 @@ export default {
           total += item.status;
         });
         console.log("total", total);
-        score = (total / habit.stats.history.length) * 100;
+        score = Math.round((total / habit.stats.history.length) * 100);
         console.log("score", score);
       }
       return score;

@@ -70,8 +70,10 @@ export default {
       user.value.uid
     );
 
+    let updateScores = true;
+
     onBeforeUpdate(() => {
-      if (habits.value) {
+      if (habits.value && updateScores) {
         return habits.value.map((habit) => {
           let history = habit.stats.history;
           if (history.length > 0) {
@@ -95,6 +97,15 @@ export default {
               console.log("2 day", habit);
               newHabit.stats.streak = 0;
               newHabit.status = 0;
+              day_2.setDate(date.getDate());
+              now.setDate(now.getDate() - 1)
+              while (now.getTime() > day_2.getTime()){
+                day_2.setDate(day_2.getDate() + 1);
+                newHabit.stats.history.push({
+                  status: 0,
+                  time: day_2.toString(),
+                })
+              }
             } else if (now.getTime() >= day_1.getTime()) {
               console.log("1 day", habit);
               newHabit.status = 0;
@@ -104,9 +115,11 @@ export default {
             }
             newHabit.stats.score = getUpdatedscore(newHabit);
             updateDoc(newHabit);
+            updateScores = false;
             return { ...newHabit };
           }
         });
+
       }
     });
 

@@ -94,7 +94,6 @@ export default {
             now.setHours(0, 0, 0, 0);
             let newHabit = habit;
             if (now.getTime() >= day_2.getTime()) {
-              console.log("2 day", habit);
               newHabit.stats.streak = 0;
               newHabit.status = 0;
               day_2.setDate(date.getDate());
@@ -107,10 +106,8 @@ export default {
                 })
               }
             } else if (now.getTime() >= day_1.getTime()) {
-              console.log("1 day", habit);
               newHabit.status = 0;
             } else {
-              console.log("no days", habit);
               return habit;
             }
             newHabit.stats.score = getUpdatedscore(newHabit);
@@ -169,9 +166,7 @@ export default {
         habit.stats.history.forEach((item) => {
           total += item.status;
         });
-        console.log("total", total);
         score = Math.round((total / habit.stats.history.length) * 100);
-        console.log("score", score);
       }
       return score;
     };
@@ -186,7 +181,6 @@ export default {
     };
 
     const createNewHabit = async () => {
-      console.log(habits.value);
       const newHabit = {
         name: newHabitName.value,
         status: 0,
@@ -211,7 +205,6 @@ export default {
           "users/" + user.value.uid + "/habits",
           habit.id
         );
-        console.log("deleting...");
         await deleteDoc();
       } else habit.showEditButtons = false;
     };

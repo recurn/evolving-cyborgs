@@ -1,11 +1,7 @@
 <template>
   <div v-if="error">{{ error }}</div>
   <div v-if="habits">
-    <div
-      class="habit-container"
-      v-for="(habit) in habits"
-      :key="habit.name"
-    >
+    <div class="habit-container" v-for="habit in habits" :key="habit.name">
       <Habit
         :habit="habit"
         @toggle="
@@ -74,39 +70,41 @@ export default {
       user.value.uid
     );
 
-    const resetHabits = onBeforeUpdate(() => {
+    onBeforeUpdate(() => {
       if (habits.value) {
         return habits.value.map((habit) => {
           let history = habit.stats.history;
           if (history.length > 0) {
+            const { updateDoc } = useDocument(
+              "users/" + user.value.uid + "/habits",
+              habit.id
+            );
             let date = new Date(history[history.length - 1].time);
-            let day_1 = new Date(date)
-            day_1.setHours(0,0,0,0);
+            let day_1 = new Date(date);
+            day_1.setHours(0, 0, 0, 0);
             day_1.setDate(date.getDate() + 1);
 
-            let day_2 = new Date(date)
-            day_2.setHours(0,0,0,0)
+            let day_2 = new Date(date);
+            day_2.setHours(0, 0, 0, 0);
             day_2.setDate(date.getDate() + 2);
 
             let now = new Date();
-            now.setHours(0,0,0,0)
+            now.setHours(0, 0, 0, 0);
+            let newHabit = habit;
             if (now.getTime() >= day_2.getTime()) {
-              console.log("2 day", habit)
-              let newHabit = habit;
+              console.log("2 day", habit);
               newHabit.stats.streak = 0;
               newHabit.status = 0;
-              return {...newHabit};
-            }
-            else if (now.getTime() >= day_1.getTime()){
-              console.log("1 day", habit)
-              let newHabit = habit;
+            } else if (now.getTime() >= day_1.getTime()) {
+              console.log("1 day", habit);
               newHabit.status = 0;
-              return {...habit, status: 0};
-            }
-            else {
-              console.log("no days", habit)
+            } else {
+              console.log("no days", habit);
               return habit;
             }
+
+            updateDoc(newHabit);
+            return { ...newHabit };
           }
         });
       }
@@ -125,6 +123,7 @@ export default {
           status: 1,
           stats: {
             streak: (habit.stats.streak += 1),
+            score: habit.score,
             history: [
               ...habit.stats.history,
               { status: 1, time: new Date().toString() },
@@ -139,13 +138,29 @@ export default {
           status: 0,
           stats: {
             streak: (habit.stats.streak -= 1),
+            score: habit.score,
             history: [...newhistory],
           },
           showEditButtons: false,
         };
       }
+      newHabit.stats.score = getUpdatedscore(newHabit);
 
       await updateDoc(newHabit);
+    };
+
+    const getUpdatedscore = (habit) => {
+      let score = 0;
+      if (habit.stats.history.length != 0) {
+        let total = 0;
+        habit.stats.history.forEach((item) => {
+          total += item.status;
+        });
+        console.log("total", total);
+        score = (total / habit.stats.history.length) * 100;
+        console.log("score", score);
+      }
+      return score;
     };
 
     const clearNewHabit = () => {
@@ -164,6 +179,7 @@ export default {
         status: 0,
         stats: {
           streak: 0,
+          score: 0,
           history: [],
         },
         showEditButtons: false,
@@ -179,12 +195,11 @@ export default {
         confirm("Deleting a habit is permanent and cannot be undone. Continue?")
       ) {
         const { deleteDoc } = useDocument(
-        "users/" + user.value.uid + "/habits",
-        habit.id
-      );
-      console.log("deleting...")
+          "users/" + user.value.uid + "/habits",
+          habit.id
+        );
+        console.log("deleting...");
         await deleteDoc();
-        
       } else habit.showEditButtons = false;
     };
 
@@ -204,7 +219,6 @@ export default {
       handleHabitDelete,
       toggleShowEdit,
       habits,
-      resetHabits,
     };
   },
 };

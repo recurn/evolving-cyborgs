@@ -17,8 +17,13 @@
           >
         </div>
 
-        <div class="streak">
+        <div class="habit-info">
+          <i class="material-icons">fast_forward</i>
           <p>{{habit.stats.streak}}</p>
+        </div>
+        <div class="habit-info">
+          <i class="material-icons">insights</i>
+          <p>{{habit.stats.score}}%</p>
         </div>
 
         <div class="habit-bottom">
@@ -47,5 +52,12 @@ export default {
 </script>
 
 <style>
-
+.habit-info {
+  padding: 10px 0px;
+  display: flex;
+  align-items: center;
+}
+.habit-info p {
+  padding: 0px 5px;
+}
 </style>

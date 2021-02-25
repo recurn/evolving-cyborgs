@@ -2,10 +2,9 @@
   <div class="navbar">
     <nav>
       <router-link :to="{ name: 'Home' }" class="home-set">
-        <img class='home-icon' src="@/assets/001-cyborg.png" />
-        <h1>Evolving Cyborgs</h1>
-
+        <img class='home-icon' src="@/assets/001-cyborg.png" />  
       </router-link>
+      <Level :user="user" />
       <div class="buttons">
         <div v-if="user">
           <button @click="handleLogoutClick">Logout</button>
@@ -23,12 +22,17 @@
 import useLogout from "@/composables/useLogout";
 import getUser from "@/composables/getUser";
 import { useRouter } from "vue-router";
+import Level from "./Level"
 
 export default {
+  components: {
+    Level
+  },
   setup() {
     const { logout } = useLogout();
     const router = useRouter();
     const { user } = getUser();
+
 
     const handleLogoutClick = async () => {
       await logout();

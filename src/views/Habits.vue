@@ -49,6 +49,7 @@ import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
 import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
+import addXp from "@/composables/useXp"
 import { onBeforeUpdate, ref } from "vue";
 //import {timestamp} from "@/firebase/config"
 
@@ -126,14 +127,18 @@ export default {
         habit.id
       );
 
+      //let xp = user.value.xp;
+
+
       let newHabit = null;
+      let xp = 5;
       if (habit.status == 0) {
         newHabit = {
           name: habit.name,
           status: 1,
           stats: {
             streak: (habit.stats.streak += 1),
-            score: habit.score,
+            score: habit.stats.score,
             history: [
               ...habit.stats.history,
               { status: 1, time: new Date().toString() },
@@ -141,7 +146,9 @@ export default {
           },
           showEditButtons: false,
         };
+
       } else {
+        xp = Math.round((-habit.stats.streak * (1 + habit.stats.score/100))*100)/100;
         let newhistory = habit.stats.history.slice(0, -1);
         newHabit = {
           name: habit.name,
@@ -156,6 +163,11 @@ export default {
       }
       newHabit.stats.score = getUpdatedscore(newHabit);
 
+      if(newHabit.status == 1){
+        xp = Math.round((newHabit.stats.streak * (1 + newHabit.stats.score/100))*100)/100;
+      }
+        
+      addXp(user.value, xp);
       await updateDoc(newHabit);
     };
 

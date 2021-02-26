@@ -15,5 +15,7 @@ export default {
 </script>
 
 <style>
-
+.content{
+  min-width: 400px;
+}
 </style>

@@ -7,7 +7,7 @@
       <Level :user="user" />
       <div class="buttons">
         <div v-if="user">
-          <button @click="handleLogoutClick">Logout</button>
+          <el-button @click="handleLogoutClick" size="small">Logout</el-button>
         </div>
         <div v-else>
           <router-link  class="btn" :to="{ name: 'Login' }">Login</router-link>

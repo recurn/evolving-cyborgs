@@ -247,7 +247,7 @@ export default {
   display: block;
 }
 .single-habit {
-  background: var(white);
+  background: white;
   padding: 20px;
   margin: 20px auto;
   width: 250px;

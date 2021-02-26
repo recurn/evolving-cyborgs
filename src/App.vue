@@ -16,6 +16,14 @@ export default {
 
 <style>
 .content{
+  width: 100%;
+}
+#app{
+background: #f6f7f2;
+min-width: 400px;
+}
+
+footer{
   min-width: 400px;
 }
 </style>

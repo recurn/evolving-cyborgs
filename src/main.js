@@ -9,6 +9,7 @@ const emitter = mitt();
 
 
 import './assets/main.css'
+import './registerServiceWorker'
 let app
 projectAuth.onAuthStateChanged(() => {
     if(!app){

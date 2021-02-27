@@ -93,6 +93,7 @@ button,
 .home-set {
   display: flex;
   align-items: center;
+
 }
 .home-set h1 {
   margin-left: 20px;

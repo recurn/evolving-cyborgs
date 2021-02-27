@@ -1,30 +1,27 @@
 <template>
   <div class="navbar">
     <nav>
-        <router-link :to="{ name: 'Home' }" class="home-set">
-          <img class="home-icon" src="@/assets/001-cyborg.png" />
-        </router-link>
+      <router-link :to="{ name: 'Home' }" class="home-set">
+        <img class="home-icon" src="@/assets/cyborg.svg" />
+        <h4>
+          Evolving <br />
+          Cyborgs
+        </h4>
+      </router-link>
 
-        <h2>Evolving Cyborgs</h2>
-
-        <div class="buttons">
-          <div v-if="user">
-            <el-button @click="handleLogoutClick" size="small"
-              >Logout</el-button
-            >
-          </div>
-          <div v-else>
-            <router-link class="btn" :to="{ name: 'Login' }">Login</router-link>
-            <router-link class="btn" :to="{ name: 'Signup' }"
-              >Signup</router-link
-            >
-          </div>
+      <div class="buttons">
+        <div v-if="user">
+          <el-button @click="handleLogoutClick" size="small">Logout</el-button>
         </div>
-
-    </nav>
-          <div>
-        <Level :user="user" />
+        <div v-else>
+          <router-link class="btn" :to="{ name: 'Login' }">Login</router-link>
+          <router-link class="btn" :to="{ name: 'Signup' }">Signup</router-link>
+        </div>
       </div>
+    </nav>
+    <div v-if="user">
+      <Level :user="user" />
+    </div>
   </div>
 </template>
 
@@ -56,6 +53,9 @@ export default {
 <style>
 .navbar {
   background: var(--primary);
+}
+nav h4 {
+  padding-left: 10px;
 }
 nav a {
   text-decoration: none;

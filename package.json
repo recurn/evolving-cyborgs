@@ -13,12 +13,14 @@
     "firebase": "^8.2.1",
     "luxon": "^1.26.0",
     "mitt": "^2.1.0",
+    "register-service-worker": "^1.7.1",
     "vue": "^3.0.6",
     "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-pwa": "^4.5.11",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",

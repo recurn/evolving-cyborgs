@@ -1,40 +1,46 @@
-import getDocument from "./getDocument"
-import useDocument from "./useDocument"
+import useDocument from "./useDocument";
 
-const addXp = (user, newXp) => {
-    const {document: userInfo, error} =  getDocument("users", user.uid);
-    const {updateDoc} = useDocument("users", user.uid)
-    if(error.value){
-        console.log("error" , error.value)
-    }
-    setTimeout(() => {
+const addXp =  (userInfo, newXp, userID) => {
+  const { updateDoc } = useDocument("users", userID);
 
-        
-        let {xp, level, nextLevelXp} = levelUp(newXp, userInfo.value.xp, userInfo.value.level, userInfo.value.nextLevelXp);
+  const { xp, level, nextLevelXp, gainLevel } = levelUp(
+    newXp,
+    userInfo.xp,
+    userInfo.level,
+    userInfo.nextLevelXp
+  );
 
-       updateDoc({xp, level, nextLevelXp})
-    }, 20)
-}
+  updateDoc({ xp, level, nextLevelXp });
+
+  return {gainLevel, level};
+};
 
 const levelUp = (newXp, xp, level, nextLevelXp) => {
-    if (!xp){
-        xp = 0;
-        level = 1;
-        nextLevelXp = 10;
-    }
-    xp += newXp;
+  let gainLevel = false;
 
-    while(xp > nextLevelXp){
-        level += 1;
-        xp -= nextLevelXp;
-        nextLevelXp = Math.round(level ** 1.5 + level * 9);
-    }
+  if (!xp) {
+    xp = 0;
+    level = 1;
+    nextLevelXp = 10;
+  }
+  xp += newXp;
 
-    if (xp < 0){
-        xp = 0;
-    }
+  while (xp > nextLevelXp) {
+    level += 1;
+    xp -= nextLevelXp;
+    nextLevelXp = Math.round(level ** 1.5 + level * 9);
+    gainLevel = true;
+  }
 
-    return {xp, level, nextLevelXp}
-}
+  if (xp < 0 && level > 1) {
+    level -= 1;
+    nextLevelXp = Math.round(level ** 1.5 + level * 9);
+    xp += nextLevelXp;
+  }
 
-export default addXp
+  xp = Math.round(xp * 100) / 100;
+
+  return { xp, level, nextLevelXp, gainLevel };
+};
+
+export default addXp;

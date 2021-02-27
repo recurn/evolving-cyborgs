@@ -12,6 +12,7 @@
     "element-plus": "^1.0.2-beta.32",
     "firebase": "^8.2.1",
     "luxon": "^1.26.0",
+    "mitt": "^2.1.0",
     "vue": "^3.0.6",
     "vue-router": "^4.0.0-0"
   },

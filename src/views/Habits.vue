@@ -49,8 +49,9 @@ import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
 import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
-import addXp from "@/composables/useXp"
-import { onBeforeUpdate, ref } from "vue";
+import getDocument from "@/composables/getDocument";
+import addXp from "@/composables/useXp";
+import { getCurrentInstance, onBeforeUpdate, ref } from "vue";
 //import {timestamp} from "@/firebase/config"
 
 export default {
@@ -70,6 +71,8 @@ export default {
       "users",
       user.value.uid
     );
+
+    const { document: userInfo } = getDocument("users", user.value.uid);
 
     let updateScores = true;
 
@@ -98,13 +101,13 @@ export default {
               newHabit.stats.streak = 0;
               newHabit.status = 0;
               day_2.setDate(date.getDate());
-              now.setDate(now.getDate() - 1)
-              while (now.getTime() > day_2.getTime()){
+              now.setDate(now.getDate() - 1);
+              while (now.getTime() > day_2.getTime()) {
                 day_2.setDate(day_2.getDate() + 1);
                 newHabit.stats.history.push({
                   status: 0,
                   time: day_2.toString(),
-                })
+                });
               }
             } else if (now.getTime() >= day_1.getTime()) {
               newHabit.status = 0;
@@ -117,7 +120,6 @@ export default {
             return { ...newHabit };
           }
         });
-
       }
     });
 
@@ -128,7 +130,6 @@ export default {
       );
 
       //let xp = user.value.xp;
-
 
       let newHabit = null;
       let xp = 5;
@@ -146,9 +147,11 @@ export default {
           },
           showEditButtons: false,
         };
-
       } else {
-        xp = Math.round((-habit.stats.streak * (1 + habit.stats.score/100))*100)/100;
+        xp =
+          Math.round(
+            -habit.stats.streak * (1 + habit.stats.score / 100) * 100
+          ) / 100;
         let newhistory = habit.stats.history.slice(0, -1);
         newHabit = {
           name: habit.name,
@@ -163,13 +166,24 @@ export default {
       }
       newHabit.stats.score = getUpdatedscore(newHabit);
 
-      if(newHabit.status == 1){
-        xp = Math.round((newHabit.stats.streak * (1 + newHabit.stats.score/100))*100)/100;
+      if (newHabit.status == 1) {
+        xp =
+          Math.round(
+            newHabit.stats.streak * (1 + newHabit.stats.score / 100) * 100
+          ) / 100;
+        emitter.emit("send-message", xp.toString());
       }
-        
-      addXp(user.value, xp);
+      const {gainLevel, level} =  addXp(userInfo.value, xp, user.value.uid);
+
+      if (gainLevel) {
+
+        emitter.emit('level-up', level);
+      }
       await updateDoc(newHabit);
     };
+
+    const internalInstance = getCurrentInstance();
+    const emitter = internalInstance.appContext.config.globalProperties.emitter;
 
     const getUpdatedscore = (habit) => {
       let score = 0;

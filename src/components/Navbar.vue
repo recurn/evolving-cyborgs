@@ -45,7 +45,15 @@ export default {
       router.push({ name: "Login" });
     };
 
-    return { handleLogoutClick, user };
+    const handleClick = (tab) => {
+      console.log(tab);
+    };
+
+    return {
+      handleLogoutClick,
+      user,
+      handleClick,
+    };
   },
 };
 </script>
@@ -60,6 +68,9 @@ nav h4 {
 nav a {
   text-decoration: none;
   color: aliceblue;
+}
+.el-menu a {
+  text-decoration: none;
 }
 nav {
   display: flex;
@@ -93,7 +104,6 @@ button,
 .home-set {
   display: flex;
   align-items: center;
-
 }
 .home-set h1 {
   margin-left: 20px;

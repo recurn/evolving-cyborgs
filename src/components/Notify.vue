@@ -9,6 +9,7 @@ export default {
       this.$message("This is a message.");
     },
   },
+ 
 };
 </script>
 

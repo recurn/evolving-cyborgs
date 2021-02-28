@@ -1,7 +1,8 @@
 {
     "name": "Evolving Cyborgs",
     "short_name": "Cyborg",
-    "start_url": "index.html",
+    "start_url": "/",
+    "scope": "/",
     "display": "fullscreen",
     "theme_color": "#0589f5",
     "background_color": "#fff",

@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Habits from '../views/Habits.vue'
 import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
+import Vices from '../views/Vices.vue'
 
 //route guard
 import {projectAuth} from '../firebase/config'
@@ -39,7 +40,13 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup
+  },
+  {
+    path: '/vices',
+    name: 'Vices',
+    component: Vices
   }
+
 ]
 
 const router = createRouter({

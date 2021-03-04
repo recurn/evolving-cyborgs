@@ -26,6 +26,12 @@ const routes = [
     beforeEnter: requireAuth
   },
   {
+    path: '/index.html',
+    name: 'Home',
+    component: Home,
+    beforeEnter: requireAuth
+  },
+  {
     path: '/habits',
     name: 'Habits',
     component: Habits,

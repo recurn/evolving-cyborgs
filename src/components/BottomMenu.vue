@@ -2,9 +2,10 @@
   <div class="footer">
     <el-menu
       v-if="showMenu"
-      default-active="1"
+      :default-active="activeIndex"
       class="el-menu-vertical"
       :router="true"
+      @click="showMenu = !showMenu"
       >
       <el-menu-item index="Habits">Habits</el-menu-item>
       <el-menu-item index="Vices">Vices</el-menu-item>
@@ -55,6 +56,7 @@ export default {
   max-width: 1200px;
   margin: 0 auto;
   padding-left: 5px;
+  display: flex;
 }
 .main-footer button {
     background: var(--primary);
@@ -71,5 +73,9 @@ export default {
     border-top: 2px solid var(--primary);
     border-left: 2px solid var(--primary);
     width: 90px;
+}
+.el-menu .el-menu-vertical{
+  max-width: 1200px;
+  margin: 0 auto;
 }
 </style>

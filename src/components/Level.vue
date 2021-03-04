@@ -18,6 +18,8 @@
 import getDocument from "@/composables/getDocument";
 import getUser from "@/composables/getUser";
 import { ref, watchEffect } from "vue";
+import { useToast } from "primevue/usetoast";
+import Toast from 'primevue/toast';
 
 export default {
   setup() {
@@ -30,6 +32,11 @@ export default {
 
     const color = ref("#ffd75d");
 
+    const toast = useToast();
+    const toastMessage = () => {
+        toast.add({severity:'info', summary: 'Info Message', detail:'Message Content', life: 3000});
+    }
+
     watchEffect(() => {
       if (userInfo.value) {
         let xp = userInfo.value.xp;
@@ -39,7 +46,7 @@ export default {
       }
     });
 
-    return { userInfo, user, style, width, color };
+    return { userInfo, user, style, width, color, toastMessage, Toast };
   },
 };
 </script>

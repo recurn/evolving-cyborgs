@@ -27,7 +27,7 @@ const routes = [
   },
   {
     path: '/index.html',
-    name: 'Home',
+    name: 'Home-alt',
     component: Home,
     beforeEnter: requireAuth
   },

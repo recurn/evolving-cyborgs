@@ -150,8 +150,8 @@ export default {
       } else {
         xp =
           Math.round(
-            -habit.stats.streak * (1 + habit.stats.score / 100) * 100
-          ) / 100;
+            -habit.stats.streak * (1 + habit.stats.score / 100) * 10
+          );
         let newhistory = habit.stats.history.slice(0, -1);
         newHabit = {
           name: habit.name,
@@ -169,8 +169,8 @@ export default {
       if (newHabit.status == 1) {
         xp =
           Math.round(
-            newHabit.stats.streak * (1 + newHabit.stats.score / 100) * 100
-          ) / 100;
+            newHabit.stats.streak * (1 + newHabit.stats.score / 100) * 10
+          );
         emitter.emit("send-message", xp.toString());
       }
       const {gainLevel, level} =  addXp(userInfo.value, xp, user.value.uid);

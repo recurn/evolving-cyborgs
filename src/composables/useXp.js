@@ -21,24 +21,24 @@ const levelUp = (newXp, xp, level, nextLevelXp) => {
   if (!xp) {
     xp = 0;
     level = 1;
-    nextLevelXp = 10;
+    nextLevelXp = 100;
   }
   xp += newXp;
 
   while (xp > nextLevelXp) {
     level += 1;
     xp -= nextLevelXp;
-    nextLevelXp = Math.round(level ** 1.5 + level * 9);
+    nextLevelXp = Math.round(level ** 1.5 + level * 9)*10;
     gainLevel = true;
   }
 
   if (xp < 0 && level > 1) {
     level -= 1;
-    nextLevelXp = Math.round(level ** 1.5 + level * 9);
+    nextLevelXp = Math.round(level ** 1.5 + level * 9)*10;
     xp += nextLevelXp;
   }
 
-  xp = Math.round(xp * 100) / 100;
+  xp = Math.round(xp);
 
   return { xp, level, nextLevelXp, gainLevel };
 };

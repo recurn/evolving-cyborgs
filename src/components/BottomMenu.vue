@@ -1,15 +1,17 @@
 <template>
   <div class="footer">
-    <el-menu
-      v-if="showMenu"
-      :default-active="activeIndex"
-      class="el-menu-vertical"
-      :router="true"
-      @click="showMenu = !showMenu"
-      >
-      <el-menu-item index="Habits">Habits</el-menu-item>
-      <el-menu-item index="Vices">Vices</el-menu-item>
-    </el-menu>
+    <div class="footer-menu">
+      <el-menu
+        v-if="showMenu"
+        :default-active="activeIndex"
+        class="el-menu-vertical"
+        :router="true"
+        @click="showMenu = !showMenu"
+        >
+        <el-menu-item index="Habits">Habits</el-menu-item>
+        <el-menu-item index="Vices">Vices</el-menu-item>
+      </el-menu>
+    </div>
     <div class="main-footer">
     <div class="footer-content">
     <button @click="showMenu = !showMenu"><i class="material-icons">menu</i></button>
@@ -67,6 +69,10 @@ export default {
 .main-footer i {
     color: white;
 }
+.footer-menu{
+  max-width: 1200px;
+  margin: 0 auto;
+}
 .el-menu-vertical{
     border-top-right-radius: 5px;
     border-right: 2px solid var(--primary);
@@ -75,7 +81,7 @@ export default {
     width: 90px;
 }
 .el-menu .el-menu-vertical{
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
 }
 </style>

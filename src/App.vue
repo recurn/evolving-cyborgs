@@ -3,15 +3,14 @@
   <div class="content">
       <router-view/>
   </div>
-  <BottomMenu />
 </template>
 
 <script>
 import Navbar from '@/components/Navbar.vue'
-import BottomMenu from '@/components/BottomMenu.vue'
+//import BottomMenu from '@/components/BottomMenu.vue'
 
 export default {
-  components: {Navbar, BottomMenu},
+  components: {Navbar},
   mounted() {
     this.emitter.on("send-message", message => {
       this.$message({
@@ -46,6 +45,7 @@ body {
 .content{
   flex: 1;
   padding-bottom: 80px;
+  padding-top: 20px;
 }
 
 .footer{

@@ -1,7 +1,8 @@
 <template>
+  
   <div v-if="error">{{ error }}</div>
-  <div v-if="habits">
-    <div class="habit-container" v-for="habit in habits" :key="habit.name">
+  <div v-if="habits" class="habit-container">
+    <div v-for="habit in habits" :key="habit.name">
       <Habit
         :habit="habit"
         @toggle="
@@ -259,6 +260,7 @@ export default {
 <style>
 .habit-container {
   display: block;
+  margin: 0 auto;
 }
 .single-habit {
   background: white;

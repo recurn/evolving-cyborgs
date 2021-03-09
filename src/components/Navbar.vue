@@ -11,7 +11,7 @@
 
       <div class="buttons">
         <div v-if="user">
-          <el-button @click="handleLogoutClick" size="small">Logout</el-button>
+          <Avatar label="" size="large" shape="circle" style="background-color: #ffffff; color:#2196F3">{{user.displayName[0]}}</Avatar>
         </div>
         <div v-else>
           <router-link class="btn" :to="{ name: 'Login' }">Login</router-link>
@@ -30,15 +30,22 @@ import useLogout from "@/composables/useLogout";
 import getUser from "@/composables/getUser";
 import { useRouter } from "vue-router";
 import Level from "./Level";
+import Avatar from 'primevue/avatar'
+import { ref } from 'vue';
 
 export default {
   components: {
     Level,
+    Avatar,
   },
   setup() {
     const { logout } = useLogout();
     const router = useRouter();
     const { user } = getUser();
+
+    const items = ref([{
+      label: 'Logout', icon: 'el-icon-right'
+    }])
 
     const handleLogoutClick = async () => {
       await logout();
@@ -53,6 +60,7 @@ export default {
       handleLogoutClick,
       user,
       handleClick,
+      items,
     };
   },
 };

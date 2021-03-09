@@ -1,6 +1,8 @@
 <template>
   <div v-if="userInfo" class="level">
-    <div class="level-display"><p>Lvl: {{ userInfo.level }}</p></div>
+    <MenuBar />
+    <div class="level-display">
+      <p id="level-text">Lvl: {{ userInfo.level }}</p></div>
 
       <el-progress
         :text-inside="true"
@@ -20,8 +22,10 @@ import getUser from "@/composables/getUser";
 import { ref, watchEffect } from "vue";
 import { useToast } from "primevue/usetoast";
 import Toast from 'primevue/toast';
+import MenuBar from '@/components/MenuBar.vue'
 
 export default {
+  components: {MenuBar},
   setup() {
     const { user } = getUser();
     const { document: userInfo } = getDocument("users", user.value.uid);
@@ -59,12 +63,15 @@ export default {
   color: white;
   margin: 0 auto;
   padding: 10px 20px;
-  width: 80%;
+  padding-bottom: 0px;
   margin-bottom: 0px;
-  padding-bottom: 10px;
+  margin-right: 10%;
   justify-content: center;
-  max-width: 800px;
+  max-width: 1200px;
   min-width: 400px;
+}
+#level-text{
+  padding: 12px;
 }
 .level-display{
   margin-right: auto;

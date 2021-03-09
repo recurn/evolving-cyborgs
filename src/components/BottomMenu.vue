@@ -2,6 +2,7 @@
   <div v-if="user" class="footer">
     <div class="footer-menu">
       <div class="footer-content">
+        <Breadcrumb :home="home" :model="items" />
         <TabMenu :model="items" />
       </div>
     </div>
@@ -12,13 +13,15 @@
 import { ref } from "vue";
 import TabMenu from "primevue/tabmenu";
 import { useRouter } from "vue-router";
-import getUser from "@/composables/getUser"
+import getUser from "@/composables/getUser";
+import Breadcrumb from 'primevue/breadcrumb';
 export default {
   components: {
     TabMenu,
+    Breadcrumb,
   },
   setup() {
-    const {user} = getUser();
+    const user = getUser();
     const activeIndex = ref("");
 
     const router = useRouter();
@@ -33,8 +36,8 @@ export default {
     };
 
     const items = [
-      { label: "Habits", icon: "pi pi-fw pi-check", to: "/habits" },
-      { label: "Vices", icon: "pi pi-fw pi-times", to: "/vices" },
+      { label: "Habits"},
+      { label: "Vices"},
     ];
 
     return {

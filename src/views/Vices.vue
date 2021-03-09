@@ -72,11 +72,11 @@ export default {
 
           let diff = now - lastTimeNum;
 
-          let days = Math.round(diff / (1000 * 60 * 60 * 24));
-          diff -= days * 1000 * 60 * 60 * 20;
-          let hours = Math.round(diff / (1000 * 60 * 60));
+          let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          diff -= days * 1000 * 60 * 60 * 24;
+          let hours = Math.floor(diff / (1000 * 60 * 60));
           diff -= hours * 1000 * 60 * 60;
-          let minutes = Math.round(diff / (1000 * 60));
+          let minutes = Math.floor(diff / (1000 * 60));
 
           return {
             name: vice.name,

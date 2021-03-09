@@ -19,7 +19,7 @@ export default {
     TabMenu,
   },
   setup() {
-    const user = getUser();
+    const {user} = getUser();
     const activeIndex = ref("");
 
     const router = useRouter();

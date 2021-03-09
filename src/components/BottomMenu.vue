@@ -1,31 +1,23 @@
 <template>
   <div class="footer">
     <div class="footer-menu">
-      <el-menu
-        v-if="showMenu"
-        :default-active="activeIndex"
-        class="el-menu-vertical"
-        :router="true"
-        @click="showMenu = !showMenu"
-        >
-        <el-menu-item index="Habits">Habits</el-menu-item>
-        <el-menu-item index="Vices">Vices</el-menu-item>
-      </el-menu>
-    </div>
-    <div class="main-footer">
-    <div class="footer-content">
-    <button @click="showMenu = !showMenu"><i class="material-icons">menu</i></button>
-    </div>
+      <div class="footer-content">
+        <TabMenu :model="items" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
+import TabMenu from "primevue/tabmenu";
 import { useRouter } from "vue-router";
 export default {
+  components: {
+    TabMenu,
+  },
   setup() {
-    const activeIndex = ref('');
+    const activeIndex = ref("");
 
     const router = useRouter();
     const backgroundMenu = ref("#0589f5");
@@ -38,50 +30,54 @@ export default {
       router.push({ name: tab.props.label });
     };
 
+    const items = [
+      { label: "Habits", icon: "pi pi-fw pi-check", to: "/habits" },
+      { label: "Vices", icon: "pi pi-fw pi-times", to: "/vices" },
+    ];
+
     return {
       activeIndex,
       backgroundMenu,
       tabPosition,
       handleClick,
       showMenu,
+      items,
     };
   },
 };
 </script>
 
-<style scoped>
-.main-footer {
-  height: 60px;
-  background: var(--primary);
+<style>
+.footer{
+  background: white;
 }
-.footer-content{
+.footer-menu {
+  height: 52px;
+  border-top: 2px solid rgba(0, 0, 0, 0.05);
+  z-index: 1;
+
+}
+.footer-content {
   max-width: 1200px;
   margin: 0 auto;
   padding-left: 5px;
   display: flex;
+  justify-content: center; 
+  z-index: -1;
+  position: relative;
 }
 .main-footer button {
-    background: var(--primary);
+  background: var(--primary);
 }
 .main-footer button:focus {
-    outline: none;
+  outline: none;
 }
 .main-footer i {
-    color: white;
+  color: white;
 }
-.footer-menu{
-  max-width: 1200px;
-  margin: 0 auto;
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link{
+  position: relative;
+  z-index: 3;
 }
-.el-menu-vertical{
-    border-top-right-radius: 5px;
-    border-right: 2px solid var(--primary);
-    border-top: 2px solid var(--primary);
-    border-left: 2px solid var(--primary);
-    width: 90px;
-}
-.el-menu .el-menu-vertical{
-  max-width: 900px;
-  margin: 0 auto;
-}
+
 </style>

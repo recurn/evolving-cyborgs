@@ -12,6 +12,7 @@
 
 <script>
 import useSignup from "@/composables/useSignup";
+import useDocument from '@/composables/useDocument'
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
 
@@ -25,8 +26,13 @@ export default {
     const route = useRouter()
 
     const handleSubmit = async () => {
-      await signup(email.value, password.value, displayName.value);
+      await signup(email.value, password.value, displayName.value)
+        .then((res) => {const {updateDoc} = useDocument('users', res.user.uid);
+        updateDoc({
+            displayName: displayName.value
+        })});
       if (!error.value) {
+        
         console.log("user signed up");
         route.push('./')
       }

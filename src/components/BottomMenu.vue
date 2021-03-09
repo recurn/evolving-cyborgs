@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div v-if="user" class="footer">
     <div class="footer-menu">
       <div class="footer-content">
         <TabMenu :model="items" />
@@ -12,11 +12,13 @@
 import { ref } from "vue";
 import TabMenu from "primevue/tabmenu";
 import { useRouter } from "vue-router";
+import getUser from "@/composables/getUser"
 export default {
   components: {
     TabMenu,
   },
   setup() {
+    const {user} = getUser();
     const activeIndex = ref("");
 
     const router = useRouter();
@@ -42,6 +44,7 @@ export default {
       handleClick,
       showMenu,
       items,
+      user,
     };
   },
 };
@@ -54,7 +57,6 @@ export default {
 .footer-menu {
   height: 52px;
   border-top: 2px solid rgba(0, 0, 0, 0.05);
-  z-index: 1;
 
 }
 .footer-content {
@@ -63,8 +65,6 @@ export default {
   padding-left: 5px;
   display: flex;
   justify-content: center; 
-  z-index: -1;
-  position: relative;
 }
 .main-footer button {
   background: var(--primary);
@@ -75,9 +75,6 @@ export default {
 .main-footer i {
   color: white;
 }
-.p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link{
-  position: relative;
-  z-index: 3;
-}
+
 
 </style>

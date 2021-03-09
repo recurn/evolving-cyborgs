@@ -50,7 +50,8 @@ const routes = [
   {
     path: '/vices',
     name: 'Vices',
-    component: Vices
+    component: Vices,
+    beforeEnter: requireAuth
   }
 
 ]

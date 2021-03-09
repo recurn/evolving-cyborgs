@@ -8,7 +8,6 @@
           Cyborgs
         </h4>
       </router-link>
-
       <div class="buttons">
         <div v-if="user">
           <Avatar label="" size="large" shape="circle" style="background-color: #ffffff; color:#2196F3">{{user.displayName[0]}}</Avatar>
@@ -41,6 +40,7 @@ export default {
   setup() {
     const { logout } = useLogout();
     const router = useRouter();
+    const routeName = ref(router.currentRoute);
     const { user } = getUser();
 
     const items = ref([{
@@ -61,6 +61,7 @@ export default {
       user,
       handleClick,
       items,
+      routeName
     };
   },
 };
@@ -85,11 +86,15 @@ nav {
   padding: 20px;
   padding-bottom: 0px;
   align-items: center;
+  text-align: center;
   color: aliceblue;
   max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 0px;
-  justify-content: space-between;
+}
+
+.routeName{
+  justify-content: center;
 }
 
 .buttons {

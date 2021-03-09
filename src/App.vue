@@ -3,14 +3,15 @@
   <div class="content">
       <router-view/>
   </div>
+  <BottomMenu />
 </template>
 
 <script>
 import Navbar from '@/components/Navbar.vue'
-//import BottomMenu from '@/components/BottomMenu.vue'
+import BottomMenu from '@/components/BottomMenu.vue'
 
 export default {
-  components: {Navbar},
+  components: {Navbar, BottomMenu},
   mounted() {
     this.emitter.on("send-message", message => {
       this.$message({

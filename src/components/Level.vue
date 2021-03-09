@@ -58,20 +58,20 @@ export default {
 <style scoped>
 .level {
   display: flex;
-  background: #ffd75d;
   background-color: var(--primary);
   color: white;
   margin: 0 auto;
   padding: 10px 20px;
   padding-bottom: 0px;
   margin-bottom: 0px;
-  margin-right: 10%;
   justify-content: center;
   max-width: 1200px;
   min-width: 400px;
 }
 #level-text{
   padding: 12px;
+  padding-left: 2%;
+  padding-right: 2%;
 }
 .level-display{
   margin-right: auto;

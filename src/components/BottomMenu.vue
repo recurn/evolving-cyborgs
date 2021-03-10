@@ -36,6 +36,7 @@ export default {
     const items = [
       { label: "Habits", icon: "el-icon-finished", to: "/habits" },
       { label: "Vices", icon: "el-icon-no-smoking", to: "/vices" },
+      { label: "Friends", icon: "pi pi-heart", to: "/friends" },
     ];
 
     return {

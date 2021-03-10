@@ -55,7 +55,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .level {
   display: flex;
   background-color: var(--primary);

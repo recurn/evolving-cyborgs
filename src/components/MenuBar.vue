@@ -55,6 +55,7 @@ export default {
             {
               label: "Vices", icon: "el-icon-no-smoking", to: "/vices"
             },
+            { label: "Friends", icon: "pi pi-heart", to: "/friends" }
           ],
         },
       ],)

@@ -1,9 +1,8 @@
 <template>
   <div v-if="error">{{ error }}</div>
-  <div v-if="!updatedVices && !error">Loading</div>
   <div v-if="updatedVices">
     <div v-for="vice in updatedVices" :key="vice.id">
-      <Vice :vice="vice" @reset="reset" />
+      <Vice :vice="vice" :user="user" @reset="reset" />
     </div>
   </div>
   <i
@@ -28,6 +27,7 @@ import useCollection from "@/composables/useCollection";
 import useDocument from "@/composables/useDocument";
 import Vice from "../components/Vice";
 import { computed, ref, watchEffect } from "vue";
+
 export default {
   components: {
     Vice,
@@ -53,6 +53,7 @@ export default {
 
       let now = new Date();
       await updateDoc({
+        lastAward: 0,
         stats: {
           history: [{ note: "", time: now.toString() }, ...vice.stats.history],
         },
@@ -81,6 +82,7 @@ export default {
           return {
             name: vice.name,
             id: vice.id,
+            lastAward: vice.lastAward,
             stats: {
               history: [...vice.stats.history],
               timeSinceLast: {
@@ -102,6 +104,7 @@ export default {
       let now = new Date();
       const newVice = {
         name: newViceName.value,
+        lastAward: 0,
         stats: {
           history: [
             {
@@ -125,6 +128,7 @@ export default {
       clearNewVice,
       createNewVice,
       reset,
+      user
     };
   },
 };

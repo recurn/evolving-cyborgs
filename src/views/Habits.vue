@@ -50,8 +50,8 @@ import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
 import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
-import getDocument from "@/composables/getDocument";
-import addXp from "@/composables/useXp";
+// import getDocument from "@/composables/getDocument";
+// import addXp from "@/composables/useXp";
 import { getCurrentInstance, onBeforeUpdate, ref } from "vue";
 //import {timestamp} from "@/firebase/config"
 
@@ -73,7 +73,7 @@ export default {
       user.value.uid
     );
 
-    const { document: userInfo } = getDocument("users", user.value.uid);
+    //const { document: userInfo } = getDocument("users", user.value.uid);
 
     let updateScores = true;
 
@@ -172,14 +172,15 @@ export default {
           Math.round(
             newHabit.stats.streak * (1 + newHabit.stats.score / 100) * 10
           );
-        emitter.emit("send-message", xp.toString());
       }
-      const {gainLevel, level} =  addXp(userInfo.value, xp, user.value.uid);
+      emitter.emit("addXp", {xp: xp, message: `For completing ${habit.name}`});
 
-      if (gainLevel) {
+      // const {gainLevel, level} =  addXp(userInfo.value, xp, user.value.uid);
 
-        emitter.emit('level-up', level);
-      }
+      // if (gainLevel) {
+
+      //   emitter.emit('level-up', level);
+      // }
       await updateDoc(newHabit);
     };
 

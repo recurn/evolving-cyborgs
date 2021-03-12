@@ -57,7 +57,7 @@ export default {
   background: white;
 }
 .footer-menu {
-  height: 52px;
+  height: 56px;
   border-top: 2px solid rgba(0, 0, 0, 0.05);
 
 }
@@ -77,6 +77,18 @@ export default {
 .main-footer i {
   color: white;
 }
+.p-tabmenu-nav a {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0px;
+}
 
+a.p-menuitem-link {
+  padding: 10px !important;
+} 
 
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 </style>

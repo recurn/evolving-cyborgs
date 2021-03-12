@@ -138,4 +138,8 @@ body {
   bottom: 0;
   width: 100%;
 }
+
+.p-toast{
+  max-width: 80% !important;
+}
 </style>

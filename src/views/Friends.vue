@@ -1,6 +1,7 @@
 <template>
 <div class="content">
-    <div class="friends">
+    <div v-if="!friends" class="loading-spinner"><i class="pi pi-spin pi-spinner" style="fontSize: 2rem"></i></div>
+    <div v-if="friends" class="friends">
         <h2>Friends</h2>
         <div v-for="friend in friends" :key="friend.id">
             <Friend :friend="friend"/>

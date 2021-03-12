@@ -1,12 +1,13 @@
 <template>
   <div v-if="error">{{ error }}</div>
+  <div v-if="!error && !updatedVices" class="loading-spinner"><i class="pi pi-spin pi-spinner" style="fontSize: 2rem"></i></div>
   <div v-if="updatedVices">
     <div v-for="vice in updatedVices" :key="vice.id">
       <Vice :vice="vice" :user="user" @reset="reset" />
     </div>
   </div>
   <i
-    v-if="!showForm"
+    v-if="!showForm && updatedVices"
     @click="showForm = !showForm"
     class="material-icons new-habit-button"
     >add_circle</i
@@ -139,8 +140,9 @@ export default {
   background: white;
   padding: 20px;
   margin: 20px auto;
-  width: 250px;
-  height: 200px;
+  width: 300px;
+  min-height: 225px;
+  max-width: 90%;
   display: flex;
   flex-direction: column;
   border-radius: 10px;

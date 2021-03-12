@@ -1,6 +1,7 @@
 <template>
   
   <div v-if="error">{{ error }}</div>
+  <div v-if="!error && !habits" class="loading-spinner"><i class="pi pi-spin pi-spinner" style="fontSize: 2rem"></i></div>
   <div v-if="habits" class="habit-container">
     <div v-for="habit in habits" :key="habit.name">
       <Habit
@@ -23,9 +24,8 @@
       />
     </div>
   </div>
-  <div v-if="!document && !error">Loading...</div>
   <i
-    v-if="!showForm"
+    v-if="!showForm && habits"
     @click="showForm = !showForm"
     class="material-icons new-habit-button"
     >add_circle</i
@@ -259,6 +259,13 @@ export default {
 </script>
 
 <style>
+.loading-spinner, .loading-spinner i{
+  margin: 0 auto;
+  padding: 0;
+}
+.loading-spinner {
+  width: 32px;
+}
 .habit-container {
   display: block;
   margin: 0 auto;
@@ -267,8 +274,9 @@ export default {
   background: white;
   padding: 20px;
   margin: 20px auto;
-  width: 250px;
-  height: 200px;
+  width: 300px;
+  min-height: 225px;
+  max-width: 90%;
   display: flex;
   flex-direction: column;
   border-radius: 10px;

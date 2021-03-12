@@ -34,9 +34,12 @@ export default {
     };
 
     const items = [
+      { label: "List", icon: "pi pi-check-square", to: "/checklist" },
       { label: "Habits", icon: "el-icon-finished", to: "/habits" },
       { label: "Vices", icon: "el-icon-no-smoking", to: "/vices" },
       { label: "Friends", icon: "pi pi-heart", to: "/friends" },
+      
+
     ];
 
     return {
@@ -80,12 +83,18 @@ export default {
 .p-tabmenu-nav a {
   display: flex;
   flex-direction: column;
+  justify-content: center !important;
+  align-items: center !important;
   padding-top: 0px;
 }
 
 a.p-menuitem-link {
   padding: 10px !important;
+
 } 
+a.p-menuitem-link span.p-menuitem-icon{
+  width: 10px !important;
+}
 
 *:focus {
   outline: none !important;

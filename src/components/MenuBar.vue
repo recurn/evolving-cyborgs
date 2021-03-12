@@ -52,6 +52,9 @@ export default {
           label: "Navigate",
           items: [
             {
+              label: "Check List", icon: "pi pi-check-square", to: "/checklist", command: () => {visibleLeft.value = false;}
+            },
+            {
               label: "Habits", icon: "el-icon-finished", to: "/habits", command: () => {visibleLeft.value = false;}
             },
             {
@@ -81,6 +84,10 @@ export default {
 .p-menu {
   border: none !important;
   width: 100% !important;
+}
+
+.p-menu .p-menuitem-text {
+  padding: 5px;
 }
 
 .p-sidebar-left.p-sidebar-sm, .p-sidebar-right.p-sidebar-sm {

@@ -1,7 +1,7 @@
 <template>
   <div class="single-habit">
         <div class="habit-top">
-          <h3 class="habit-name">{{ habit.name }}</h3>
+          <h2 class="habit-name">{{ habit.name }}</h2>
           <i
             v-if="!habit.showEditButtons"
             @click="$emit('toggle')"

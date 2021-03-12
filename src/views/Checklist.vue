@@ -245,6 +245,7 @@ export default {
       createNewCheck,
       showForm,
       toggleCheck,
+      clearNewCheck,
     };
   },
 };

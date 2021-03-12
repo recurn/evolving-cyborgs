@@ -1,5 +1,5 @@
 <template>
-  <div class="single-habit">
+  <div class="card single-habit">
         <div class="habit-top">
           <h2 class="habit-name">{{ habit.name }}</h2>
           <i

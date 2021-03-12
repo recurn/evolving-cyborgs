@@ -1,5 +1,5 @@
 <template>
-  <div class="single-vice">
+  <div class="card single-vice">
     <h3>{{ vice.name }}</h3>
     <p>
       {{ vice.stats.timeSinceLast.days }}d {{ vice.stats.timeSinceLast.hours }}h

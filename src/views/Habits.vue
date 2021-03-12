@@ -279,7 +279,7 @@ export default {
   max-width: 90%;
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 5px;
   border: 1px solid var(--secondary);
   box-shadow: 1px 2px 3px rgba(50, 50, 50, 0.5);
 }

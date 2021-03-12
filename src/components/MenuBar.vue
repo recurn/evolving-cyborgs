@@ -4,11 +4,15 @@
       type="button"
       icon="pi pi-bars"
       class="p-button-lg"
-      @click="toggle"
+      @click="visibleLeft = true"
       aria-haspopup="true"
       aria-controls="overlay_menu"
     />
-    <Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
+    <Sidebar v-model:visible="visibleLeft" :autoZIndex="false" class="p-sidebar-sm">
+      
+    <Menu :model="items"/>
+    </Sidebar>
+    
   </div>
 </template>
 
@@ -18,19 +22,17 @@ import Button from "primevue/button";
 import useLogout from "@/composables/useLogout";
 import { useRouter } from 'vue-router';
 import getUser from '@/composables/getUser'
+import Sidebar from 'primevue/sidebar';
 import { ref } from 'vue';
 
 export default {
-  components: { Button, Menu },
-  methods: {
-    toggle(event) {
-      this.$refs.menu.toggle(event);
-    },
-  },
+  components: { Button, Menu, Sidebar },
   setup() {
     const route = useRouter();
     const { logout } = useLogout();
     const {user} = getUser();
+    const visibleLeft = ref(false);
+
     const items = ref([
         {
           label: "Options",
@@ -50,17 +52,17 @@ export default {
           label: "Navigate",
           items: [
             {
-              label: "Habits", icon: "el-icon-finished", to: "/habits"
+              label: "Habits", icon: "el-icon-finished", to: "/habits", command: () => {visibleLeft.value = false;}
             },
             {
-              label: "Vices", icon: "el-icon-no-smoking", to: "/vices"
+              label: "Vices", icon: "el-icon-no-smoking", to: "/vices", command: () => {visibleLeft.value = false;}
             },
-            { label: "Friends", icon: "pi pi-heart", to: "/friends" }
+            { label: "Friends", icon: "pi pi-heart", to: "/friends", command: () => {visibleLeft.value = false;} }
           ],
         },
       ],)
 
-      return {items, user}
+      return {items, user, visibleLeft}
   }
 };
 </script>
@@ -75,5 +77,13 @@ export default {
 .p-button.p-button-lg{
   background: var(--primary);
   border: none;
+}
+.p-menu {
+  border: none !important;
+  width: 100% !important;
+}
+
+.p-sidebar-left.p-sidebar-sm, .p-sidebar-right.p-sidebar-sm {
+  width: 200px !important;
 }
 </style>

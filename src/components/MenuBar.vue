@@ -3,7 +3,7 @@
     <Button
       type="button"
       icon="pi pi-bars"
-      class="p-button-lg"
+      class="p-button-lg p-button-rounded"
       @click="visibleLeft = true"
       aria-haspopup="true"
       aria-controls="overlay_menu"
@@ -92,5 +92,9 @@ export default {
 
 .p-sidebar-left.p-sidebar-sm, .p-sidebar-right.p-sidebar-sm {
   width: 200px !important;
+  z-index: 5 !important;
+}
+.p-component-overlay {
+  z-index: -1 !important;
 }
 </style>

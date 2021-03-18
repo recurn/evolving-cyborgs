@@ -66,7 +66,7 @@ export default {
   margin-bottom: 0px;
   justify-content: center;
   max-width: 1200px;
-  min-width: 400px;
+  min-width: 300px;
 }
 #level-text{
   padding: 12px;

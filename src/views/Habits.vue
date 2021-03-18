@@ -1,7 +1,8 @@
 <template>
-  
   <div v-if="error">{{ error }}</div>
-  <div v-if="!error && !habits" class="loading-spinner"><i class="pi pi-spin pi-spinner" style="fontSize: 2rem"></i></div>
+  <div v-if="!error && !habits" class="loading-spinner">
+    <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
+  </div>
   <div v-if="habits" class="habit-container">
     <div v-for="habit in habits" :key="habit.name">
       <Habit
@@ -24,24 +25,31 @@
       />
     </div>
   </div>
-  <i
-    v-if="!showForm && habits"
-    @click="showForm = !showForm"
-    class="material-icons new-habit-button"
-    >add_circle</i
-  >
-  <form v-if="showForm" @submit.prevent="createNewHabit">
-    <input
-      type="text"
-      placeholder="Habit Name"
-      required
-      v-model="newHabitName"
-    />
-    <div>
-      <button>Create</button>
-      <button @click.prevent="clearNewHabit">Cancel</button>
+  <form v-if="showForm" class="add-form card" autocomplete="off">
+    <span class="p-float-label">
+      <InputText id="inputtext" type="text" v-model="newHabitName" />
+      <label for="inputtext">Habit Name</label>
+    </span>
+    <div class="add-form-buttons">
+      <Button
+        @click.prevent="clearNewHabit"
+        icon="pi pi-times"
+        id="bottom-add-form-button"
+        class="p-button-rounded p-button-danger"
+      />
+      <Button
+        @click.prevent="createNewHabit"
+        icon="pi pi-check"
+        id="bottom-add-form-button"
+        class="p-button-rounded"
+      />
+      <!-- <Button class="p-button-danger"  @click.prevent="clearNewHabit">Cancel</Button>
+      <Button id="bottom-add-form-button">Create</Button> -->
     </div>
+      
   </form>
+  <div v-if="showForm" id="overlay" @click="showForm = false">
+  </div>
 </template>
 
 <script>
@@ -50,14 +58,16 @@ import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
 import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
-// import getDocument from "@/composables/getDocument";
-// import addXp from "@/composables/useXp";
+import InputText from "primevue/inputtext";
+import Button from "primevue/button";
+
 import { getCurrentInstance, onBeforeUpdate, ref } from "vue";
-//import {timestamp} from "@/firebase/config"
 
 export default {
   components: {
     Habit,
+    InputText,
+    Button,
   },
   setup() {
     const { user } = getUser();
@@ -149,10 +159,9 @@ export default {
           showEditButtons: false,
         };
       } else {
-        xp =
-          Math.round(
-            -habit.stats.streak * (1 + habit.stats.score / 100) * 10
-          );
+        xp = Math.round(
+          -habit.stats.streak * (1 + habit.stats.score / 100) * 10
+        );
         let newhistory = habit.stats.history.slice(0, -1);
         newHabit = {
           name: habit.name,
@@ -168,12 +177,14 @@ export default {
       newHabit.stats.score = getUpdatedscore(newHabit);
 
       if (newHabit.status == 1) {
-        xp =
-          Math.round(
-            newHabit.stats.streak * (1 + newHabit.stats.score / 100) * 10
-          );
+        xp = Math.round(
+          newHabit.stats.streak * (1 + newHabit.stats.score / 100) * 10
+        );
       }
-      emitter.emit("addXp", {xp: xp, message: `For completing ${habit.name}`});
+      emitter.emit("addXp", {
+        xp: xp,
+        message: `For completing ${habit.name}`,
+      });
 
       // const {gainLevel, level} =  addXp(userInfo.value, xp, user.value.uid);
 
@@ -186,6 +197,11 @@ export default {
 
     const internalInstance = getCurrentInstance();
     const emitter = internalInstance.appContext.config.globalProperties.emitter;
+    emitter.on("addButton", toggleShowForm);
+
+    function toggleShowForm() {
+      showForm.value = !showForm.value;
+    }
 
     const getUpdatedscore = (habit) => {
       let score = 0;
@@ -259,7 +275,8 @@ export default {
 </script>
 
 <style>
-.loading-spinner, .loading-spinner i{
+.loading-spinner,
+.loading-spinner i {
   margin: 0 auto;
   padding: 0;
 }
@@ -282,6 +299,34 @@ export default {
   border-radius: 5px;
   border: 1px solid var(--secondary);
   box-shadow: 1px 2px 3px rgba(50, 50, 50, 0.5);
+}
+.add-form {
+  position: fixed;
+  padding: 20px;
+  width: 300px !important;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+#bottom-add-form-button {
+  margin: 10px auto;
+}
+#overlay {
+  height: 150%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #00000073;
+  z-index: 2;
+}
+.add-form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+.p-float-label {
+  margin: 20px 0px !important;
 }
 .habit-top {
   display: flex;
@@ -312,7 +357,7 @@ export default {
   cursor: pointer;
 }
 form {
-  max-width: 250px;
+  max-width: 300px;
 }
 button {
   display: inline-block;

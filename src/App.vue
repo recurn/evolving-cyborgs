@@ -113,7 +113,8 @@ export default {
 
 <style>
 #app {
-  min-width: 400px;
+  min-width: 300px;
+  z-index: 0;
 }
 
 html,
@@ -133,7 +134,6 @@ body {
 }
 
 .footer {
-  overflow: hidden;
   position: fixed;
   bottom: 0;
   width: 100%;

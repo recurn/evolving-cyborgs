@@ -6,7 +6,30 @@
       <Vice :vice="vice" :user="user" @reset="reset" />
     </div>
   </div>
-  <i
+  <form v-if="showForm" autocomplete="off" class="add-form card">
+    <span class="p-float-label">
+      <InputText id="inputtext" type="text" v-model="newViceName" />
+      <label for="inputtext">Vice Name</label>
+    </span>
+    <div class="add-form-buttons">
+      <Button
+        @click.prevent="clearNewVice"
+        icon="pi pi-times"
+        id="bottom-add-form-button"
+        class="p-button-rounded p-button-danger"
+      />
+      <Button
+        @click.prevent="createNewVice"
+        icon="pi pi-check"
+        id="bottom-add-form-button"
+        class="p-button-rounded"
+      />
+    </div>
+      
+  </form>
+  <div v-if="showForm" id="overlay" @click="showForm = false">
+  </div>
+  <!-- <i
     v-if="!showForm && updatedVices"
     @click="showForm = !showForm"
     class="material-icons new-habit-button"
@@ -18,7 +41,7 @@
       <button>Create</button>
       <button @click.prevent="clearNewVice">Cancel</button>
     </div>
-  </form>
+  </form> -->
 </template>
 
 <script>
@@ -27,10 +50,14 @@ import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
 import useDocument from "@/composables/useDocument";
 import Vice from "../components/Vice";
-import { computed, ref, watchEffect } from "vue";
+import Button from "primevue/button"
+import InputText from "primevue/inputtext"
+import { computed, getCurrentInstance, ref, watchEffect } from "vue";
 
 export default {
   components: {
+    Button,
+    InputText,
     Vice,
   },
   setup() {
@@ -100,6 +127,14 @@ export default {
     const updatedVices = computed(() => {
       return vices.value;
     });
+
+    const internalInstance = getCurrentInstance();
+    const emitter = internalInstance.appContext.config.globalProperties.emitter;
+    emitter.on("addButton", toggleShowForm);
+
+    function toggleShowForm() {
+      showForm.value = !showForm.value;
+    }
 
     const createNewVice = async () => {
       let now = new Date();

@@ -2,6 +2,7 @@
   <div v-if="user" class="footer">
     <div class="footer-menu">
       <div class="footer-content">
+        <Button icon="pi pi-plus" class="p-button-rounded add-button" @click="addButton"/>
         <TabMenu :model="items" />
       </div>
     </div>
@@ -9,14 +10,16 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { getCurrentInstance, ref } from "vue";
 import TabMenu from "primevue/tabmenu";
+import Button from "primevue/button"
 import { useRouter } from "vue-router";
 import getUser from "@/composables/getUser";
 
 export default {
   components: {
     TabMenu,
+    Button,
   },
   setup() {
     const {user} = getUser();
@@ -32,6 +35,13 @@ export default {
     const handleClick = (tab) => {
       router.push({ name: tab.props.label });
     };
+
+    const internalInstance = getCurrentInstance();
+    const emitter = internalInstance.appContext.config.globalProperties.emitter;
+
+    const addButton = () => {
+      emitter.emit('addButton', { a: 'b' })
+    }
 
     const items = [
       { label: "List", icon: "pi pi-check-square", to: "/checklist" },
@@ -50,6 +60,7 @@ export default {
       showMenu,
       items,
       user,
+      addButton
     };
   },
 };
@@ -64,12 +75,20 @@ export default {
   border-top: 2px solid rgba(0, 0, 0, 0.05);
 
 }
+.add-button {
+  position: absolute !important;
+  margin: 0 auto;
+  bottom: 37px;
+  z-index: 5;
+}
 .footer-content {
   max-width: 1200px;
+  min-width: 300px;
   margin: 0 auto;
-  padding-left: 5px;
+  padding-left: 0px;
   display: flex;
   justify-content: center; 
+  text-align: center;
 }
 .main-footer button {
   background: var(--primary);
@@ -88,12 +107,20 @@ export default {
   padding-top: 0px;
 }
 
+.p-tabmenu {
+  width: 100% !important;
+}
+
 a.p-menuitem-link {
   padding: 10px !important;
 
 } 
 a.p-menuitem-link span.p-menuitem-icon{
   width: 10px !important;
+}
+
+.p-tabmenuitem{
+  width: 25% !important;
 }
 
 *:focus {

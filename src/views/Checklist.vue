@@ -7,7 +7,7 @@
     <div v-for="check in checks" :key="check.name">
       <div class="card checkList-card">
         <div>
-          <h2>{{ check.name }}</h2>
+          <h3>{{ check.name }}</h3>
         </div>
 
         <div>
@@ -35,24 +35,30 @@
       </div>
     </div>
   </div>
-  <i
-    v-if="!showForm && checks"
-    @click="showForm = !showForm"
-    class="material-icons new-habit-button"
-    >add_circle</i
-  >
-  <form v-if="showForm" @submit.prevent="createNewCheck">
-    <input
-      type="text"
-      placeholder="Item Name"
-      required
-      v-model="newCheckName"
-    />
-    <div>
-      <button>Create</button>
-      <button @click.prevent="clearNewCheck">Cancel</button>
+
+  <form v-if="showForm" autocomplete="off" class="add-form card">
+    <span class="p-float-label">
+      <InputText id="inputtext" type="text" v-model="newCheckName" />
+      <label for="inputtext">Item Name</label>
+    </span>
+    <div class="add-form-buttons">
+      <Button
+        @click.prevent="clearNewCheck"
+        icon="pi pi-times"
+        id="bottom-add-form-button"
+        class="p-button-rounded p-button-danger"
+      />
+      <Button
+      @click.prevent="createNewCheck"
+        icon="pi pi-check"
+        id="bottom-add-form-button"
+        class="p-button-rounded"
+      />
     </div>
+      
   </form>
+  <div v-if="showForm" id="overlay" @click="showForm = false">
+  </div>
 </template>
 
 <script>
@@ -62,10 +68,16 @@ import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
 // import getDocument from "@/composables/getDocument";
 // import addXp from "@/composables/useXp";
-import { onBeforeUpdate, ref } from "vue";
+import { getCurrentInstance, onBeforeUpdate, ref } from "vue";
+import InputText from 'primevue/inputtext';
+import Button from "primevue/button"
 //import {timestamp} from "@/firebase/config"
 
 export default {
+  components: {
+    Button,
+    InputText,
+  },
   setup() {
     const { user } = getUser();
     const newCheckName = ref("");
@@ -127,90 +139,18 @@ export default {
         ...check,
       });
     };
+        const internalInstance = getCurrentInstance();
+    const emitter = internalInstance.appContext.config.globalProperties.emitter;
+    emitter.on("addButton", toggleShowForm);
 
-    // const handleCheckoff = async (habit) => {
-    //   const { updateDoc } = useDocument(
-    //     "users/" + user.value.uid + "/habits",
-    //     habit.id
-    //   );
-
-    //   //let xp = user.value.xp;
-
-    //   let newHabit = null;
-    //   let xp = 5;
-    //   if (habit.status == 0) {
-    //     newHabit = {
-    //       name: habit.name,
-    //       status: 1,
-    //       stats: {
-    //         streak: (habit.stats.streak += 1),
-    //         score: habit.stats.score,
-    //         history: [
-    //           ...habit.stats.history,
-    //           { status: 1, time: new Date().toString() },
-    //         ],
-    //       },
-    //       showEditButtons: false,
-    //     };
-    //   } else {
-    //     xp =
-    //       Math.round(
-    //         -habit.stats.streak * (1 + habit.stats.score / 100) * 10
-    //       );
-    //     let newhistory = habit.stats.history.slice(0, -1);
-    //     newHabit = {
-    //       name: habit.name,
-    //       status: 0,
-    //       stats: {
-    //         streak: (habit.stats.streak -= 1),
-    //         score: habit.score,
-    //         history: [...newhistory],
-    //       },
-    //       showEditButtons: false,
-    //     };
-    //   }
-    //   newHabit.stats.score = getUpdatedscore(newHabit);
-
-    //   if (newHabit.status == 1) {
-    //     xp =
-    //       Math.round(
-    //         newHabit.stats.streak * (1 + newHabit.stats.score / 100) * 10
-    //       );
-    //   }
-    //   emitter.emit("addXp", {xp: xp, message: `For completing ${habit.name}`});
-
-    //   // const {gainLevel, level} =  addXp(userInfo.value, xp, user.value.uid);
-
-    //   // if (gainLevel) {
-
-    //   //   emitter.emit('level-up', level);
-    //   // }
-    //   await updateDoc(newHabit);
-    // };
-
-    // const internalInstance = getCurrentInstance();
-    // const emitter = internalInstance.appContext.config.globalProperties.emitter;
-
-    // const getUpdatedscore = (habit) => {
-    //   let score = 0;
-    //   if (habit.stats.history.length != 0) {
-    //     let total = 0;
-    //     habit.stats.history.forEach((item) => {
-    //       total += item.status;
-    //     });
-    //     score = Math.round((total / habit.stats.history.length) * 100);
-    //   }
-    //   return score;
-    // };
+    function toggleShowForm() {
+      showForm.value = !showForm.value;
+    }
 
     const clearNewCheck = () => {
       showForm.value = false;
       newCheckName.value = "";
     };
-
-    // const toggleShowEdit = (habit) => {
-    //   habit.showEditButtons = !habit.showEditButtons;
-    // };
 
     const createNewCheck = async () => {
       const newCheck = {

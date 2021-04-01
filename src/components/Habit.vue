@@ -58,6 +58,7 @@ export default {
 <style>
 .card-top {
   display: flex;
+  align-items: center;
 }
 .habit-info {
   padding: 10px 0px;
@@ -69,6 +70,7 @@ export default {
 }
 .edit-menu {
   display: flex !important;
+  align-items: center;
   margin-left: auto !important;
   position: relative !important;
   font-size: 20px;

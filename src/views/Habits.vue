@@ -61,6 +61,7 @@ import useCollection from "@/composables/useCollection";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 
+
 import { getCurrentInstance, onBeforeUpdate, ref } from "vue";
 
 export default {
@@ -328,20 +329,12 @@ export default {
 .p-float-label {
   margin: 20px 0px !important;
 }
-.habit-top {
-  display: flex;
-}
 .habit-bottom {
   margin-top: auto;
   display: flex;
   flex-direction: row;
 }
-.edit-habit {
-  display: flex;
-  margin-left: auto;
-  position: relative;
-  font-size: 20px;
-}
+
 .habit-checkbox {
   font-size: 35px;
 }

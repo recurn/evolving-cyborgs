@@ -3,7 +3,7 @@
   <div v-if="!error && !updatedVices" class="loading-spinner"><i class="pi pi-spin pi-spinner" style="fontSize: 2rem"></i></div>
   <div v-if="updatedVices">
     <div v-for="vice in updatedVices" :key="vice.id">
-      <Vice :vice="vice" :user="user" @reset="reset" />
+      <Vice :vice="vice" :user="user" @reset="reset" @delete="handleViceDelete" />
     </div>
   </div>
   <form v-if="showForm" autocomplete="off" class="add-form card">
@@ -88,6 +88,18 @@ export default {
       });
     };
 
+    const handleViceDelete = async (vice) => {
+      if (
+        confirm("Deleting a vice is permanent and cannot be undone. Continue?")
+      ) {
+        const { deleteDoc } = useDocument(
+          "users/" + user.value.uid + "/vices",
+          vice.id
+        );
+        await deleteDoc();
+      }
+    };
+
     watchEffect(() => {
       if (vices.value) {
         let now = new Date();
@@ -164,7 +176,8 @@ export default {
       clearNewVice,
       createNewVice,
       reset,
-      user
+      user,
+      handleViceDelete
     };
   },
 };

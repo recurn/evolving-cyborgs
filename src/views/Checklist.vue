@@ -6,10 +6,11 @@
   <div v-if="checks">
     <div v-for="check in checks" :key="check.name">
       <div class="card checkList-card">
-        <div>
+        <div id="checklist-info">
           <h3>{{ check.name }}</h3>
+          <EditMenu @delete="() => {
+            handleCheckoffDelete(check)}"/>
         </div>
-
         <div>
           <i
             v-if="check.status"
@@ -66,6 +67,7 @@ import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
 import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
+import EditMenu from "@/components/EditMenu.vue"
 // import getDocument from "@/composables/getDocument";
 // import addXp from "@/composables/useXp";
 import { getCurrentInstance, onBeforeUpdate, ref } from "vue";
@@ -77,6 +79,7 @@ export default {
   components: {
     Button,
     InputText,
+    EditMenu,
   },
   setup() {
     const { user } = getUser();
@@ -87,12 +90,17 @@ export default {
       "users/" + user.value.uid + "/checkList"
     );
 
-    // const { deleteDoc, updateDoc, isPending, error: useError } = useDocument(
-    //   "users",
-    //   user.value.uid
-    // );
-
-    //const { document: userInfo } = getDocument("users", user.value.uid);
+    const handleCheckoffDelete = async (check) => {
+      if (
+        confirm("Deleting a item is permanent and cannot be undone. Continue?")
+      ) {
+        const { deleteDoc } = useDocument(
+          "users/" + user.value.uid + "/checkList",
+          check.id
+        );
+        await deleteDoc();
+      }
+    }
 
     let updateScores = true;
 
@@ -186,6 +194,7 @@ export default {
       showForm,
       toggleCheck,
       clearNewCheck,
+      handleCheckoffDelete,
     };
   },
 };
@@ -202,7 +211,8 @@ text-align: center;
 
 .checkList-card div {
     display: flex;
-    flex-direction: row ;
-    }
+    flex-direction: row;
+    align-items: center;
+}
 
 </style>

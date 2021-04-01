@@ -1,6 +1,10 @@
 <template>
   <div class="card single-vice">
-    <h3>{{ vice.name }}</h3>
+    <div class="card-top">
+      <h3>{{ vice.name }}</h3>
+      <EditMenu @delete="$emit('delete', vice)" />
+    </div>
+
     <p>
       {{ vice.stats.timeSinceLast.days }}d {{ vice.stats.timeSinceLast.hours }}h
       {{ vice.stats.timeSinceLast.minutes }}m
@@ -16,12 +20,14 @@
 
 <script>
 import Button from "primevue/button";
-import useDocument from "@/composables/useDocument"
+import EditMenu from "@/components/EditMenu.vue";
+import useDocument from "@/composables/useDocument";
 import { getCurrentInstance, onBeforeMount } from "vue";
 
 export default {
   components: {
     Button,
+    EditMenu,
   },
   props: ["vice", "user"],
   setup(props) {
@@ -29,9 +35,12 @@ export default {
     const emitter = internalInstance.appContext.config.globalProperties.emitter;
 
     onBeforeMount(() => {
-      const {updateDoc} = useDocument('users/' + props.user.uid + '/vices', props.vice.id)
+      const { updateDoc } = useDocument(
+        "users/" + props.user.uid + "/vices",
+        props.vice.id
+      );
       let vice = props.vice;
-      let days = vice.stats.timeSinceLast.days
+      let days = vice.stats.timeSinceLast.days;
       if (vice.lastAward == null) {
         vice.lastAward = 0;
       }
@@ -40,12 +49,15 @@ export default {
         for (let i = vice.lastAward + 1; i <= days; i++) {
           //maximum extra 200% reward after 20 days
           console.log(i);
-          xp += Math.round(25 * Math.min(15,(1 + i * 0.5)));
+          xp += Math.round(25 * Math.min(15, 1 + i * 0.5));
         }
-        emitter.emit("addXp", {xp: xp, message: `For abstaining from ${vice.name} for ${days} days`});
+        emitter.emit("addXp", {
+          xp: xp,
+          message: `For abstaining from ${vice.name} for ${days} days`,
+        });
         updateDoc({
-          lastAward: days
-        })
+          lastAward: days,
+        });
       }
     });
   },

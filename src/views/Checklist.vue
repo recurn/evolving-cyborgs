@@ -8,11 +8,35 @@
       <div class="card checkList-card">
         <div id="checklist-info">
           <h3>{{ check.name }}</h3>
-          <EditMenu @delete="() => {
-            handleCheckoffDelete(check)}"/>
+          <EditMenu
+            @delete="
+              () => {
+                handleCheckoffDelete(check);
+              }
+            "
+          />
         </div>
         <div>
-          <i
+          <Button
+            v-if="check.status == 1"
+            icon="pi pi-check"
+            @click="
+              () => {
+                toggleCheck(check);
+              }
+            "
+          />
+          <Button
+            v-if="check.status == 0"
+            icon="pi pi-minus"
+            @click="
+              () => {
+                toggleCheck(check);
+              }
+            "
+            class="p-button-outlined p-button-plain"
+          />
+          <!-- <i
             v-if="check.status"
             class="material-icons habit-checkbox"
             @click="
@@ -31,7 +55,7 @@
               }
             "
             >check_box_outline_blank</i
-          >
+          > -->
         </div>
       </div>
     </div>
@@ -50,16 +74,14 @@
         class="p-button-rounded p-button-danger"
       />
       <Button
-      @click.prevent="createNewCheck"
+        @click.prevent="createNewCheck"
         icon="pi pi-check"
         id="bottom-add-form-button"
         class="p-button-rounded"
       />
     </div>
-      
   </form>
-  <div v-if="showForm" id="overlay" @click="showForm = false">
-  </div>
+  <div v-if="showForm" id="overlay" @click="showForm = false"></div>
 </template>
 
 <script>
@@ -67,12 +89,12 @@ import getUser from "@/composables/getUser";
 import useDocument from "@/composables/useDocument";
 import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
-import EditMenu from "@/components/EditMenu.vue"
+import EditMenu from "@/components/EditMenu.vue";
 // import getDocument from "@/composables/getDocument";
 // import addXp from "@/composables/useXp";
 import { getCurrentInstance, onBeforeUpdate, ref } from "vue";
-import InputText from 'primevue/inputtext';
-import Button from "primevue/button"
+import InputText from "primevue/inputtext";
+import Button from "primevue/button";
 //import {timestamp} from "@/firebase/config"
 
 export default {
@@ -100,7 +122,7 @@ export default {
         );
         await deleteDoc();
       }
-    }
+    };
 
     let updateScores = true;
 
@@ -147,7 +169,7 @@ export default {
         ...check,
       });
     };
-        const internalInstance = getCurrentInstance();
+    const internalInstance = getCurrentInstance();
     const emitter = internalInstance.appContext.config.globalProperties.emitter;
     emitter.on("addButton", toggleShowForm);
 
@@ -201,18 +223,17 @@ export default {
 </script>
 
 <style>
-.checkList-card{
+.checkList-card {
   margin-bottom: 15px !important;
   display: flex;
-justify-content: space-between;
-flex-direction: row !important;    
-text-align: center;
+  justify-content: space-between;
+  flex-direction: row !important;
+  text-align: center;
 }
 
 .checkList-card div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
-
 </style>

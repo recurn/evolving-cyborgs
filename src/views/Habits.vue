@@ -293,7 +293,7 @@ export default {
   padding: 20px;
   margin: 20px auto;
   width: 300px;
-  min-height: 225px;
+  /* min-height: 225px; */
   max-width: 90%;
   display: flex;
   flex-direction: column;

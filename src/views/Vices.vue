@@ -1,11 +1,11 @@
 <template>
   <div v-if="error">{{ error }}</div>
   <div v-if="!error && !updatedVices" class="loading-spinner"><i class="pi pi-spin pi-spinner" style="fontSize: 2rem"></i></div>
-  <div v-if="updatedVices">
+  <transition-group tag="div" name="list" appear v-if="updatedVices">
     <div v-for="vice in updatedVices" :key="vice.id">
       <Vice :vice="vice" :user="user" @reset="reset" @delete="handleViceDelete" />
     </div>
-  </div>
+  </transition-group>
   <form v-if="showForm" autocomplete="off" class="add-form card">
     <span class="p-float-label">
       <InputText id="inputtext" type="text" v-model="newViceName" />

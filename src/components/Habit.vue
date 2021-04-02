@@ -3,19 +3,6 @@
     <div class="card-top">
       <h3 class="habit-name">{{ habit.name }}</h3>
       <EditMenu @delete="$emit('delete')" />
-      <!-- <i
-            v-if="!habit.showEditButtons"
-            @click="$emit('toggle')"
-            class="material-icons edit-habit"
-            >more_vert</i
-          >
-
-         <i
-            v-if="habit.showEditButtons"
-            @click="$emit('delete')"
-            class="material-icons edit-habit delete"
-            >delete_forever</i
-          > -->
     </div>
     <div class="habit-content">
       <div class="habit-icons">
@@ -29,11 +16,13 @@
         </div>
       </div>
       <div class="habit-checkoff">
-        <Button
-          v-if="habit.status == 1"
-          icon="pi pi-check"
-          @click="$emit('checkoff')"
-        />
+        <transition name="bounce">
+          <Button
+            v-if="habit.status == 1"
+            icon="pi pi-check"
+            @click="$emit('checkoff')"
+          />
+        </transition>
         <Button
           v-if="habit.status == 0"
           icon="pi pi-minus"
@@ -42,20 +31,20 @@
         />
       </div>
     </div>
-    <div class="habit-bottom">
-      <!-- <i
+    <!-- <div class="habit-bottom">
+      <i
             v-if="habit.status == 1"
             class="material-icons habit-checkbox"
             @click="$emit('checkoff')"
             >check_box</i
           > -->
-      <!-- <i
+    <!-- <i
             v-if="habit.status == 0"
             class="material-icons habit-checkbox"
             @click="$emit('checkoff')"
             >check_box_outline_blank</i
-          >  -->
-    </div>
+          > 
+    </div> -->
   </div>
 </template>
 
@@ -100,6 +89,7 @@ export default {
   flex-direction: column;
 }
 .habit-content {
+  height: 100%;
   margin-bottom: 0px;
   padding-bottom: 0px;
   margin-top: auto !important;

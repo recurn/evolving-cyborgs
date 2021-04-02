@@ -3,7 +3,7 @@
   <div v-if="!error && !habits" class="loading-spinner">
     <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
   </div>
-  <div v-if="habits" class="habit-container">
+  <transition-group tag="div" name="list" appear v-if="habits" class="habit-container">
     <div v-for="habit in habits" :key="habit.name">
       <Habit
         :habit="habit"
@@ -24,7 +24,7 @@
         "
       />
     </div>
-  </div>
+  </transition-group>
   <form v-if="showForm" class="add-form card" autocomplete="off">
     <span class="p-float-label">
       <InputText id="inputtext" type="text" v-model="newHabitName" />
@@ -359,4 +359,17 @@ button {
 .edit-habit.edit {
   font-size: 20px;
 }
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list-enter-active {
+  transition: all 0.4s ease;
+}
+.list-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
 </style>

@@ -3,7 +3,7 @@
   <div v-if="!error && !checks" class="loading-spinner">
     <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
   </div>
-  <div v-if="checks">
+  <transition-group tag="div" name="list" appear v-if="checks">
     <div v-for="check in checks" :key="check.name">
       <div class="card checkList-card">
         <div id="checklist-info">
@@ -17,6 +17,7 @@
           />
         </div>
         <div>
+          <transition name="bounce">
           <Button
             v-if="check.status == 1"
             icon="pi pi-check"
@@ -26,6 +27,7 @@
               }
             "
           />
+          </transition>
           <Button
             v-if="check.status == 0"
             icon="pi pi-minus"
@@ -36,30 +38,10 @@
             "
             class="p-button-outlined p-button-plain"
           />
-          <!-- <i
-            v-if="check.status"
-            class="material-icons habit-checkbox"
-            @click="
-              () => {
-                toggleCheck(check);
-              }
-            "
-            >check_box</i
-          >
-          <i
-            v-if="!check.status"
-            class="material-icons habit-checkbox"
-            @click="
-              () => {
-                toggleCheck(check);
-              }
-            "
-            >check_box_outline_blank</i
-          > -->
         </div>
       </div>
     </div>
-  </div>
+  </transition-group>
 
   <form v-if="showForm" autocomplete="off" class="add-form card">
     <span class="p-float-label">
@@ -73,12 +55,13 @@
         id="bottom-add-form-button"
         class="p-button-rounded p-button-danger"
       />
-      <Button
-        @click.prevent="createNewCheck"
-        icon="pi pi-check"
-        id="bottom-add-form-button"
-        class="p-button-rounded"
-      />
+
+        <Button
+          @click.prevent="createNewCheck"
+          icon="pi pi-check"
+          id="bottom-add-form-button"
+          class="p-button-rounded"
+        />
     </div>
   </form>
   <div v-if="showForm" id="overlay" @click="showForm = false"></div>
@@ -235,5 +218,25 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  position: fixed;
+  outline: none;
+  background: none !important;
+  opacity: 0;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

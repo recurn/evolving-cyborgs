@@ -5,9 +5,11 @@
     </div>
     <div v-if="friends" class="friends">
       <h2>Friends</h2>
-      <div v-for="friend in friends" :key="friend.id">
-        <Friend :friend="friend" />
-      </div>
+      <transition-group tag="div" name="list" appear>
+        <div v-for="friend in friends" :key="friend.id">
+          <Friend :friend="friend" />
+        </div>
+      </transition-group>
       <form v-if="showForm" autocomplete="off" class="add-form card">
         <span class="p-float-label">
           <InputText id="inputtext" type="text" v-model="friendInput" />

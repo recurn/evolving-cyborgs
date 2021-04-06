@@ -1,6 +1,5 @@
 <template>
   <div v-if="userInfo" class="level">
-    <MenuBar />
     <div class="level-display">
       <p id="level-text">Lvl: {{ userInfo.level }}</p></div>
 
@@ -22,10 +21,9 @@ import getUser from "@/composables/getUser";
 import { ref, watchEffect } from "vue";
 import { useToast } from "primevue/usetoast";
 import Toast from 'primevue/toast';
-import MenuBar from '@/components/MenuBar.vue'
+
 
 export default {
-  components: {MenuBar},
   setup() {
     const { user } = getUser();
     const { document: userInfo } = getDocument("users", user.value.uid);

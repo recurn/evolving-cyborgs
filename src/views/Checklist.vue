@@ -17,7 +17,7 @@
           />
         </div>
         <div>
-          <transition name="bounce">
+          <transition name="bounce" mode="out-in">
           <Button
             v-if="check.status == 1"
             icon="pi pi-check"
@@ -27,9 +27,8 @@
               }
             "
           />
-          </transition>
           <Button
-            v-if="check.status == 0"
+            v-else-if="check.status == 0"
             icon="pi pi-minus"
             @click="
               () => {
@@ -38,6 +37,7 @@
             "
             class="p-button-outlined p-button-plain"
           />
+          </transition>
         </div>
       </div>
     </div>
@@ -222,12 +222,17 @@ export default {
 .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
-.bounce-leave-active {
+.bounce-leave-from{
+  opacity: 0;
+  animation: none;
+}
+/* .bounce-leave-active {
   position: fixed;
   outline: none;
   background: none !important;
   opacity: 0;
-}
+  animation: none;
+} */
 @keyframes bounce-in {
   0% {
     transform: scale(0);

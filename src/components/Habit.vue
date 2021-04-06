@@ -16,19 +16,19 @@
         </div>
       </div>
       <div class="habit-checkoff">
-        <transition name="bounce">
+        <transition name="bounce" mode="out-in">
           <Button
             v-if="habit.status == 1"
             icon="pi pi-check"
             @click="$emit('checkoff')"
-          />
-        </transition>
+          />     
         <Button
-          v-if="habit.status == 0"
+          v-else-if="habit.status == 0"
           icon="pi pi-minus"
           @click="$emit('checkoff')"
           class="p-button-outlined p-button-plain"
         />
+        </transition>
       </div>
     </div>
     <!-- <div class="habit-bottom">

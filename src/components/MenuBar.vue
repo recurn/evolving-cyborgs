@@ -4,11 +4,11 @@
       type="button"
       icon="pi pi-bars"
       class="p-button-lg p-button-rounded"
-      @click="visibleLeft = true"
+      @click="visibleRight = true"
       aria-haspopup="true"
       aria-controls="overlay_menu"
     />
-    <Sidebar v-model:visible="visibleLeft" :autoZIndex="false" class="p-sidebar-sm">
+    <Sidebar v-model:visible="visibleRight" position="right" :autoZIndex="false" class="p-sidebar-sm">
       
     <Menu :model="items"/>
     </Sidebar>
@@ -31,7 +31,7 @@ export default {
     const route = useRouter();
     const { logout } = useLogout();
     const {user} = getUser();
-    const visibleLeft = ref(false);
+    const visibleRight = ref(false);
 
     const items = ref([
         {
@@ -52,20 +52,20 @@ export default {
           label: "Navigate",
           items: [
             {
-              label: "Check List", icon: "pi pi-check-square", to: "/checklist", command: () => {visibleLeft.value = false;}
+              label: "Check List", icon: "pi pi-check-square", to: "/checklist", command: () => {visibleRight.value = false;}
             },
             {
-              label: "Habits", icon: "el-icon-finished", to: "/habits", command: () => {visibleLeft.value = false;}
+              label: "Habits", icon: "el-icon-finished", to: "/habits", command: () => {visibleRight.value = false;}
             },
             {
-              label: "Vices", icon: "el-icon-no-smoking", to: "/vices", command: () => {visibleLeft.value = false;}
+              label: "Vices", icon: "el-icon-no-smoking", to: "/vices", command: () => {visibleRight.value = false;}
             },
-            { label: "Friends", icon: "pi pi-heart", to: "/friends", command: () => {visibleLeft.value = false;} }
+            { label: "Friends", icon: "pi pi-heart", to: "/friends", command: () => {visibleRight.value = false;} }
           ],
         },
       ],)
 
-      return {items, user, visibleLeft}
+      return {items, user, visibleRight}
   }
 };
 </script>
@@ -73,8 +73,6 @@ export default {
 <style>
 .menu-bar {
   display: flex;
-  margin-right: 20px;
-  left: 20px;
   z-index: 2;
 }
 .p-button.p-button-lg{

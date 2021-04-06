@@ -1,17 +1,25 @@
 <template>
   <div class="navbar">
     <nav>
-      <router-link :to="{ name: 'Home' }" class="home-set">
-        <img class="home-icon" src="@/assets/cyborg.svg" />
-        <h4>
-          Evolving <br />
-          Cyborgs
-        </h4>
-      </router-link>
-      <div class="buttons">
-        <div v-if="user">
-          <Avatar label="" size="large" shape="circle" style="background-color: #ffffff; color:#2196F3">{{user.displayName[0]}}</Avatar>
-        </div>
+      <div id="navbar-top">
+        <Avatar
+          label=""
+          size="large"
+          shape="circle"
+          style="background-color: #ffffff; color: #2196f3"
+          >{{ user.displayName[0] }}</Avatar
+        >
+        <router-link :to="{ name: 'Home' }" class="home-set">
+          <img class="home-icon" src="@/assets/cyborg.svg" />
+          <h4>
+            Evolving <br />
+            Cyborgs
+          </h4>
+        </router-link>
+        <MenuBar />
+      </div>
+      <div class="buttons" v-if="user">
+        <div v-if="user"></div>
         <div v-else>
           <router-link class="btn" :to="{ name: 'Login' }">Login</router-link>
           <router-link class="btn" :to="{ name: 'Signup' }">Signup</router-link>
@@ -29,13 +37,15 @@ import useLogout from "@/composables/useLogout";
 import getUser from "@/composables/getUser";
 import { useRouter } from "vue-router";
 import Level from "./Level";
-import Avatar from 'primevue/avatar'
-import { ref } from 'vue';
+import Avatar from "primevue/avatar";
+import { ref } from "vue";
+import MenuBar from "@/components/MenuBar";
 
 export default {
   components: {
     Level,
     Avatar,
+    MenuBar,
   },
   setup() {
     const { logout } = useLogout();
@@ -43,9 +53,12 @@ export default {
     const routeName = ref(router.currentRoute);
     const { user } = getUser();
 
-    const items = ref([{
-      label: 'Logout', icon: 'el-icon-right'
-    }])
+    const items = ref([
+      {
+        label: "Logout",
+        icon: "el-icon-right",
+      },
+    ]);
 
     const handleLogoutClick = async () => {
       await logout();
@@ -61,13 +74,19 @@ export default {
       user,
       handleClick,
       items,
-      routeName
+      routeName,
     };
   },
 };
 </script>
 
 <style>
+#navbar-top {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-content: center;
+}
 .navbar {
   background: var(--primary);
 }
@@ -93,7 +112,7 @@ nav {
   margin-bottom: 0px;
 }
 
-.routeName{
+.routeName {
   justify-content: center;
 }
 

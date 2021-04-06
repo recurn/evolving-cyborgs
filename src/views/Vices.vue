@@ -1,9 +1,16 @@
 <template>
   <div v-if="error">{{ error }}</div>
-  <div v-if="!error && !updatedVices" class="loading-spinner"><i class="pi pi-spin pi-spinner" style="fontSize: 2rem"></i></div>
+  <div v-if="!error && !updatedVices" class="loading-spinner">
+    <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
+  </div>
   <transition-group tag="div" name="list" appear v-if="updatedVices">
     <div v-for="vice in updatedVices" :key="vice.id">
-      <Vice :vice="vice" :user="user" @reset="reset" @delete="handleViceDelete" />
+      <Vice
+        :vice="vice"
+        :user="user"
+        @reset="reset"
+        @delete="handleViceDelete"
+      />
     </div>
   </transition-group>
   <form v-if="showForm" autocomplete="off" class="add-form card">
@@ -25,10 +32,8 @@
         class="p-button-rounded"
       />
     </div>
-      
   </form>
-  <div v-if="showForm" id="overlay" @click="showForm = false">
-  </div>
+  <div v-if="showForm" id="overlay" @click="showForm = false"></div>
   <!-- <i
     v-if="!showForm && updatedVices"
     @click="showForm = !showForm"
@@ -50,8 +55,8 @@ import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
 import useDocument from "@/composables/useDocument";
 import Vice from "../components/Vice";
-import Button from "primevue/button"
-import InputText from "primevue/inputtext"
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
 import { computed, getCurrentInstance, ref, watchEffect } from "vue";
 
 export default {
@@ -100,29 +105,45 @@ export default {
       }
     };
 
+    const parseSecondsToDHM = (time) => {
+      let days = Math.floor(time / (1000 * 60 * 60 * 24));
+      time -= days * 1000 * 60 * 60 * 24;
+      let hours = Math.floor(time / (1000 * 60 * 60));
+      time -= hours * 1000 * 60 * 60;
+      let minutes = Math.floor(time / (1000 * 60));
+
+      return { days, hours, minutes };
+    };
+
     watchEffect(() => {
       if (vices.value) {
         let now = new Date();
         vices.value = vices.value.map((vice) => {
-          // const { updateDoc } = useDocument(
-          //   "users/" + user.value.uid + "/vices",
-          //   vice.id
-          // );
-
           let lastTimeNum = Date.parse(vice.stats.history[0].time);
 
           let diff = now - lastTimeNum;
 
-          let days = Math.floor(diff / (1000 * 60 * 60 * 24));
-          diff -= days * 1000 * 60 * 60 * 24;
-          let hours = Math.floor(diff / (1000 * 60 * 60));
-          diff -= hours * 1000 * 60 * 60;
-          let minutes = Math.floor(diff / (1000 * 60));
+          let { days, hours, minutes } = parseSecondsToDHM(diff);
+
+          if (!vice.best) {
+            vice.best = {
+              time: diff,
+            };
+          }
+          
+          //let bestDiff = now - vice.best.time;
+          let { days: bestDays, hours: bestHours, minutes: bestMinutes } = parseSecondsToDHM(vice.best.time);
 
           return {
             name: vice.name,
             id: vice.id,
             lastAward: vice.lastAward,
+            best: {
+              time: vice.best.time,
+              days: bestDays,
+              hours: bestHours,
+              minutes: bestMinutes,
+            },
             stats: {
               history: [...vice.stats.history],
               timeSinceLast: {
@@ -177,7 +198,7 @@ export default {
       createNewVice,
       reset,
       user,
-      handleViceDelete
+      handleViceDelete,
     };
   },
 };

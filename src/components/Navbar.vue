@@ -2,7 +2,7 @@
   <div class="navbar">
     <nav>
       <div id="navbar-top">
-        <Avatar
+        <Avatar v-if="user"
           label=""
           size="large"
           shape="circle"

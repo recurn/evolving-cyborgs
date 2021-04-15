@@ -1,6 +1,6 @@
 import useDocument from "./useDocument";
 
-const addXp =  (userInfo, newXp, userID) => {
+const addXp =  (userInfo, newXp, userID, stats) => {
   const { updateDoc } = useDocument("users", userID);
 
   const { xp, level, nextLevelXp, gainLevel } = levelUp(
@@ -9,6 +9,10 @@ const addXp =  (userInfo, newXp, userID) => {
     userInfo.level,
     userInfo.nextLevelXp
   );
+
+  if (stats.length){
+    console.log(stats);
+  }
 
   updateDoc({ xp, level, nextLevelXp });
 

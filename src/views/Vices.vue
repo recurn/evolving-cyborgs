@@ -34,19 +34,6 @@
     </div>
   </form>
   <div v-if="showForm" id="overlay" @click="showForm = false"></div>
-  <!-- <i
-    v-if="!showForm && updatedVices"
-    @click="showForm = !showForm"
-    class="material-icons new-habit-button"
-    >add_circle</i
-  >
-  <form v-if="showForm" @submit.prevent="createNewVice">
-    <input type="text" placeholder="Vice Name" required v-model="newViceName" />
-    <div>
-      <button>Create</button>
-      <button @click.prevent="clearNewVice">Cancel</button>
-    </div>
-  </form> -->
 </template>
 
 <script>

@@ -1,14 +1,14 @@
 <template>
   <div class="card" id="stats-card" v-if="userInfo">
-    <div v-if="userInfo.stats">
-      <div v-for="stat in userInfo.stats" :key="stat">
+    <div v-if="stats && stats.length > 0">
+      <div v-for="stat in stats" :key="stat.id">
         <Stat :stat="stat" :name="stat.name" />
       </div>
     </div>
-    <div id="stat-buttons" v-else>
+    <div id="stat-buttons" v-else-if="stats && stats.length == 0">
       <Button @click="initializeStats">Add Default</Button>
       <br />
-      <!-- Feature not yet added
+      <!-- Feature not yet added  
         <Button>Create New</Button> -->
     </div>
   </div>
@@ -17,7 +17,8 @@
 <script>
 import getUser from "@/composables/getUser";
 import getDocument from "@/composables/getDocument";
-import useDocument from "@/composables/useDocument";
+import useCollection from "@/composables/useCollection";
+import getCollection from "@/composables/getCollection";
 import Button from "primevue/button";
 import Stat from "@/components/Stat.vue";
 
@@ -26,26 +27,38 @@ export default {
   setup() {
     const { user } = getUser();
     const { document: userInfo } = getDocument("users", user.value.uid);
-
-    const { updateDoc, isPending, error: useError } = useDocument(
-      "users",
-      user.value.uid
+    const { documents: stats, error: collectionError } = getCollection(
+      "users/" + user.value.uid + "/stats"
     );
 
+    const { isPending, addDoc } = useCollection(
+      "users/" + user.value.uid + "/stats"
+    );
+
+
+
     const initializeStats = () => {
-      updateDoc({
-        stats: [
-          { name: "Strength", level: 1, xp: 0, nextLvlXp: 10 },
-          { name: "Dexterity", level: 1, xp: 0, nextLvlXp: 10 },
-          { name: "Constitution", level: 1, xp: 0, nextLvlXp: 10 },
-          { name: "Intelligence", level: 1, xp: 0, nextLvlXp: 10 },
-          { name: "Wisdom", level: 1, xp: 0, nextLvlXp: 10 },
-          { name: "Charisma", level: 1, xp: 0, nextLvlXp: 10 },
-        ],
+      addDoc({ index: 0, name: "Strength", level: 1, xp: 0, nextLevelXp: 10 });
+      addDoc({ index: 1, name: "Dexterity", level: 1, xp: 0, nextLevelXp: 10 });
+      addDoc({
+        index: 2,
+        name: "Constitution",
+        level: 1,
+        xp: 0,
+        nextLevelXp: 10,
       });
+      addDoc({
+        index: 3,
+        name: "Intelligence",
+        level: 1,
+        xp: 0,
+        nextLevelXp: 10,
+      });
+      addDoc({ index: 4, name: "Wisdom", level: 1, xp: 0, nextLevelXp: 10 });
+      addDoc({ index: 5, name: "Charisma", level: 1, xp: 0, nextLevelXp: 10 });
     };
 
-    return { isPending, userInfo, useError, initializeStats };
+    return { isPending, userInfo, collectionError, initializeStats, stats };
   },
 };
 </script>

@@ -84,8 +84,6 @@ export default {
       user.value.uid
     );
 
-    //const { document: userInfo } = getDocument("users", user.value.uid);
-
     let updateScores = true;
 
     onBeforeUpdate(() => {
@@ -185,6 +183,7 @@ export default {
       emitter.emit("addXp", {
         xp: xp,
         message: `For completing ${habit.name}`,
+        stats: habit.linkedStats
       });
 
       // const {gainLevel, level} =  addXp(userInfo.value, xp, user.value.uid);

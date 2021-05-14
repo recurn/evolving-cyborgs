@@ -55,9 +55,6 @@ export default {
 </script>
 
 <style>
-.edit-menu{
-
-}
 #edit-menu{
     max-width: 100px !important;
 }

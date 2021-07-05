@@ -1,6 +1,7 @@
+import { forEach } from "core-js/core/array";
 import useDocument from "./useDocument";
 
-const addXp =  (userInfo, newXp, userID) => {
+const addXp =  (userInfo, newXp, userID, stats) => {
   const { updateDoc } = useDocument("users", userID);
 
   const { xp, level, nextLevelXp, gainLevel } = levelUp(
@@ -9,6 +10,18 @@ const addXp =  (userInfo, newXp, userID) => {
     userInfo.level,
     userInfo.nextLevelXp
   );
+
+  if (stats.length){
+    let statsUpdate = userInfo.stats;
+    stats.forEach(habitStat => {
+      stat = userInfo.stats
+      const {xp: statXp, level: statLevel, nextLevelXp: statNextLevelXp, gainLevel: statGainLevel} =
+         levelUp(newXp * stat.percent, stat.xp, stat.level, stat.nextLevelXp);
+      statsUpdate[stat.index] = {index: stat.index, name: stat.name, level: statLevel, xp: statXp, nextLevelXp: statNextLevelXp}
+      console.log(statGainLevel);
+    })
+    updateDoc({stats: statsUpdate})
+  }
 
   updateDoc({ xp, level, nextLevelXp });
 

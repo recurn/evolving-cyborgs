@@ -60,7 +60,8 @@ export default {
             {
               label: "Vices", icon: "el-icon-no-smoking", to: "/vices", command: () => {visibleRight.value = false;}
             },
-            { label: "Friends", icon: "pi pi-heart", to: "/friends", command: () => {visibleRight.value = false;} }
+            { label: "Friends", icon: "pi pi-heart", to: "/friends", command: () => {visibleRight.value = false;} },
+            { label: "Attributes", icon: "pi pi-id-card", to: "/attributes", command: () => {visibleRight.value = false;} },
           ],
         },
       ],)

@@ -2,7 +2,7 @@
   <div class="card single-habit">
     <div class="card-top">
       <h3 class="habit-name">{{ habit.name }}</h3>
-      <EditMenu @delete="$emit('delete')" />
+      <EditMenu @delete="$emit('delete')" @update="$emit('update')" />
     </div>
     <div class="habit-content">
       <div class="habit-icons">
@@ -15,19 +15,24 @@
           <p>{{ habit.stats.score }}%</p>
         </div>
       </div>
+      <div class="attributes">
+        <div v-for="att in habit.attributes" :key="att.name">
+          <img :src="'img/icons/stats/' + att.name + '.svg'" :alt="att.name" />
+        </div>
+      </div>
       <div class="habit-checkoff">
         <transition name="bounce" mode="out-in">
           <Button
             v-if="habit.status == 1"
             icon="pi pi-check"
             @click="$emit('checkoff')"
-          />     
-        <Button
-          v-else-if="habit.status == 0"
-          icon="pi pi-minus"
-          @click="$emit('checkoff')"
-          class="p-button-outlined p-button-plain"
-        />
+          />
+          <Button
+            v-else-if="habit.status == 0"
+            icon="pi pi-minus"
+            @click="$emit('checkoff')"
+            class="p-button-outlined p-button-plain"
+          />
         </transition>
       </div>
     </div>
@@ -48,19 +53,26 @@
   </div>
 </template>
 
-
-
 <script>
 import EditMenu from "@/components/EditMenu.vue";
 import Button from "primevue/button";
+
 export default {
-  emits: ["delete"],
+  emits: ["delete", "checkoff", "update"],
   components: { EditMenu, Button },
-  props: ["habit"],
+  props: ["habit", "user"],
 };
 </script>
 
 <style>
+.attributes {
+  display: flex;
+  flex-direction: column;
+}
+.attributes img {
+  width: 20px;
+}
+
 .card-top {
   display: flex;
   align-items: center;

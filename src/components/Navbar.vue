@@ -3,6 +3,7 @@
     <nav>
       <div id="navbar-top">
         <Avatar
+        v-if="user"
           label=""
           size="large"
           shape="circle"

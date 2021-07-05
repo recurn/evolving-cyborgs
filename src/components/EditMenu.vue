@@ -19,7 +19,7 @@ export default {
     Menu,
     Button,
   },
-  emits: ["delete"],
+  emits: ["delete", "update"],
   data() {
     return {
       items: [
@@ -27,12 +27,7 @@ export default {
           label: "Update",
           icon: "pi pi-refresh",
           command: () => {
-            this.$toast.add({
-              severity: "warn",
-              summary: "Not Functional",
-              detail: "This component is not yet functional and is only included to test the interface",
-              life: 3000,
-            });
+            this.$emit("update")
           },
         },
         {

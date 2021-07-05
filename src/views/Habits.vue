@@ -3,10 +3,17 @@
   <div v-if="!error && !habits" class="loading-spinner">
     <i class="pi pi-spin pi-spinner" style="fontsize: 2rem"></i>
   </div>
-  <transition-group tag="div" name="list" appear v-if="habits" class="habit-container">
+  <transition-group
+    tag="div"
+    name="list"
+    appear
+    v-if="habits"
+    class="habit-container"
+  >
     <div v-for="habit in habits" :key="habit.name">
       <Habit
         :habit="habit"
+        :user="user.uid"
         @toggle="
           () => {
             toggleShowEdit(habit);
@@ -15,6 +22,11 @@
         @delete="
           () => {
             handleHabitDelete(habit);
+          }
+        "
+        @update="
+          () => {
+            handleHabitUpdate(habit);
           }
         "
         @checkoff="
@@ -46,10 +58,58 @@
       <!-- <Button class="p-button-danger"  @click.prevent="clearNewHabit">Cancel</Button>
       <Button id="bottom-add-form-button">Create</Button> -->
     </div>
-      
   </form>
-  <div v-if="showForm" id="overlay" @click="showForm = false">
-  </div>
+  <div v-if="showForm" id="overlay" @click="showForm = false"></div>
+  <form v-if="showUpdate" class="add-form card" autocomplete="off">
+    <span class="p-float-label">
+      <input type="text" v-model="showUpdate.name" />
+      <!-- <label for="inputtext">Habit Name</label> -->
+    </span>
+    <div class="habit-update">
+      <div v-for="att in showUpdate.attributes" :key="att.name">
+        <select v-model="att.name">
+          <option>None</option>
+          <option v-for="userAtt in attributes" :key="userAtt.index">
+            {{ userAtt.name }}
+          </option>
+        </select>
+        <input type="number" v-model="att.percent">%
+        <Button
+          @click.prevent="
+            showUpdate.attributes = showUpdate.attributes.filter(
+              (item) => item !== att
+            )
+          "
+          icon="pi pi-minus"
+          id="bottom-add-form-button"
+          class="p-button-rounded p-button-danger"
+        />
+      </div>
+      <Button
+        @click.prevent="showUpdate.attributes.push({})"
+        icon="pi pi-plus"
+        id="bottom-add-form-button"
+        class="p-button-rounded"
+      />
+    </div>
+    <div class="add-form-buttons">
+      <Button
+        @click.prevent="showUpdate = false"
+        icon="pi pi-times"
+        id="bottom-add-form-button"
+        class="p-button-rounded p-button-danger"
+      />
+      <Button
+        @click.prevent="updateHabit(showUpdate)"
+        icon="pi pi-check"
+        id="bottom-add-form-button"
+        class="p-button-rounded"
+      />
+      <!-- <Button class="p-button-danger"  @click.prevent="clearNewHabit">Cancel</Button>
+      <Button id="bottom-add-form-button">Create</Button> -->
+    </div>
+  </form>
+  <div v-if="showUpdate" id="overlay" @click="showUpdate = false"></div>
 </template>
 
 <script>
@@ -60,7 +120,6 @@ import getCollection from "@/composables/getCollection";
 import useCollection from "@/composables/useCollection";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
-
 
 import { getCurrentInstance, onBeforeUpdate, ref } from "vue";
 
@@ -133,13 +192,15 @@ export default {
       }
     });
 
+    const { documents: attributes } = getCollection(
+      "users/" + user.value.uid + "/attributes"
+    );
+
     const handleCheckoff = async (habit) => {
       const { updateDoc } = useDocument(
         "users/" + user.value.uid + "/habits",
         habit.id
       );
-
-      //let xp = user.value.xp;
 
       let newHabit = null;
       let xp = 5;
@@ -183,7 +244,15 @@ export default {
       emitter.emit("addXp", {
         xp: xp,
         message: `For completing ${habit.name}`,
-        stats: habit.linkedStats
+        stats: habit.linkedStats,
+      });
+
+      habit.attributes.forEach((att) => {
+        let attribute = attributes.value.find((a) => a.name == att.name);
+        emitter.emit("addStatXp", {
+          xp: (xp * att.percent) / 100,
+          stat: attribute,
+        });
       });
 
       // const {gainLevel, level} =  addXp(userInfo.value, xp, user.value.uid);
@@ -253,6 +322,22 @@ export default {
       } else habit.showEditButtons = false;
     };
 
+    const showUpdate = ref(false);
+
+    const handleHabitUpdate = async (habit) => {
+      showUpdate.value = { ...habit };
+    };
+
+    const updateHabit = async (habit) => {
+      showUpdate.value = false;
+      const { updateDoc } = useDocument(
+        "users/" + user.value.uid + "/habits",
+        habit.id
+      );
+
+      updateDoc(habit);
+    };
+
     return {
       user,
       document,
@@ -267,7 +352,11 @@ export default {
       newHabitName,
       createNewHabit,
       handleHabitDelete,
+      handleHabitUpdate,
+      updateHabit,
+      showUpdate,
       toggleShowEdit,
+      attributes,
       habits,
     };
   },
@@ -275,6 +364,21 @@ export default {
 </script>
 
 <style>
+.habit-update{
+  display: flex;
+  flex-direction: column;
+}
+.habit-update div{
+  align-content: center;
+  display: flex;
+  justify-content: flex-start;
+  height: 40px;
+  margin: 10px 0px;
+}
+.habit-update input {
+  max-width: 50px;
+}
+
 .loading-spinner,
 .loading-spinner i {
   margin: 0 auto;
@@ -370,5 +474,4 @@ button {
   transition: all 0.4s ease;
   position: absolute;
 }
-
 </style>

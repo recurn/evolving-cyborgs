@@ -1,27 +1,27 @@
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import 'firebase/auth'
-import 'firebase/storage'
+import firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/auth";
+import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB5sD4OdKgrroxABBEeKPNo2I8m3KE8xp4",
+  apiKey: "AIzaSyBQG4LHP83vG2ejxmvvhEO9JmkCRz1Ura8",
   authDomain: "evolving-cyborgs.firebaseapp.com",
   projectId: "evolving-cyborgs",
   storageBucket: "evolving-cyborgs.appspot.com",
   messagingSenderId: "227289225069",
-  appId: "1:227289225069:web:70744b4ed8fa3f742aac64",
-  measurementId: "G-PP87ZVKPSX"
+  appId: "1:227289225069:web:3ebe01331f89b51f2aac64",
+  measurementId: "G-MNK9S3Y1TD",
 };
 
 //init firebase
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig);
 
 //init services
-const projectFirestore = firebase.firestore()
-const projectAuth = firebase.auth()
-const projectStorage = firebase.storage()
+const projectFirestore = firebase.firestore();
+const projectAuth = firebase.auth();
+const projectStorage = firebase.storage();
 
 //timestamp
-const timestamp = firebase.firestore.FieldValue.serverTimestamp
+const timestamp = firebase.firestore.FieldValue.serverTimestamp;
 
-export {projectFirestore, projectAuth, projectStorage, timestamp}
+export { projectFirestore, projectAuth, projectStorage, timestamp };

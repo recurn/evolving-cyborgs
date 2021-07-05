@@ -6,7 +6,7 @@ import Signup from '../views/auth/Signup.vue'
 import Vices from '../views/Vices.vue'
 import Friends from '../views/Friends.vue'
 import Checklist from '../views/Checklist.vue'
-import Stats from '../views/Stats.vue'
+import Attributes from '../views/Attributes.vue'
 
 //route guard
 import {projectAuth} from '../firebase/config'
@@ -53,9 +53,9 @@ const routes = [
     beforeEnter: requireAuth
   },
   {
-    path: '/stats',
-    name: 'Stats',
-    component: Stats,
+    path: '/attributes',
+    name: 'Attributes',
+    component: Attributes,
     beforeEnter: requireAuth
   },
   {

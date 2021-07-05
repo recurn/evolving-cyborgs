@@ -16,17 +16,17 @@
       </template>
     </el-progress>
     <div>
-      <Button @click="addXp"> Add XP </Button>
+      <!-- <Button @click="addXp"> Add XP </Button> -->
     </div>
   </div>
 </template>
 
 <script>
 import { getCurrentInstance } from "vue";
-import Button from "primevue/button"
+// import Button from "primevue/button"
 export default {
   props: ["stat", "name"],
-  components: {Button},
+  // components: {Button},
   setup(props) {
     const internalInstance = getCurrentInstance();
     const emitter = internalInstance.appContext.config.globalProperties.emitter;

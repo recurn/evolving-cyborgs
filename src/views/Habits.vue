@@ -148,6 +148,11 @@ export default {
     onBeforeUpdate(() => {
       if (habits.value && updateScores) {
         return habits.value.map((habit) => {
+          
+          if(!habit.attributes){
+            habit.attributes = [];
+          }
+
           let history = habit.stats.history;
           if (history.length > 0) {
             const { updateDoc } = useDocument(

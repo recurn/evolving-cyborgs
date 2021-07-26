@@ -1,0 +1,128 @@
+<template>
+  <div v-if="activities && activities.length > 0">
+    <div v-for="activity in activities" :key="activity.id">
+      <div class="card">
+        {{ activity.name }}
+        <div class="attributes">
+          <div v-for="att in activity.attributes" :key="att.name">
+            <img
+              :src="'img/icons/stats/' + att.name + '.svg'"
+              :alt="att.name"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form v-if="showForm" autocomplete="off">
+    <span>
+      <input
+        id="inputtext"
+        type="text"
+        v-model="newActivity.name"
+        placeholder="Activity Name"
+      />
+    </span>
+    <!-- TODO: Switch this into its own component (on Habits too!) -->
+    <div v-for="att in newActivity.attributes" :key="att.name">
+      <select v-model="att.name">
+        <option>None</option>
+        <option v-for="userAtt in attributes" :key="userAtt.index">
+          {{ userAtt.name }}
+        </option>
+      </select>
+      <input type="number" v-model="att.percent" />%
+      <Button
+        @click.prevent="
+          newActivity.attributes = newActivity.attributes.filter(
+            (item) => item !== att
+          )
+        "
+        icon="pi pi-minus"
+        id="bottom-add-form-button"
+        class="p-button-rounded p-button-danger"
+      />
+    </div>
+    <Button
+      @click.prevent="newActivity.attributes.push({})"
+      icon="pi pi-plus"
+      id="bottom-add-form-button"
+      class="p-button-rounded"
+    />
+    <Button @click="handleCreateActivity">Create</Button>
+    <Button @click="clearNewActivity">Clear</Button>
+  </form>
+</template>
+
+<script>
+import getUser from "@/composables/getUser";
+import Button from "primevue/button";
+//import getDocument from "@/composables/getDocument";
+import useCollection from "@/composables/useCollection";
+import getCollection from "@/composables/getCollection";
+import { getCurrentInstance, ref } from "@vue/runtime-core";
+//import Button from "primevue/button";
+export default {
+  components: { Button },
+  setup() {
+    const { user } = getUser();
+    const { documents: activities } = getCollection(
+      "users/" + user.value.uid + "/activities"
+    );
+    const { documents: attributes } = getCollection(
+      "users/" + user.value.uid + "/attributes"
+    );
+    console.log(attributes);
+
+    const { addDoc: addActivity } = useCollection(
+      "users/" + user.value.uid + "/activities"
+    );
+
+    const internalInstance = getCurrentInstance();
+    const emitter = internalInstance.appContext.config.globalProperties.emitter;
+    emitter.on("addButton", toggleShowForm);
+
+    const showForm = ref(false);
+
+    function toggleShowForm() {
+      showForm.value = !showForm.value;
+    }
+
+    const newActivity = ref({ name: "", attributes: [] });
+    const handleCreateActivity = () => {
+      let newAttributes = newActivity.value.attributes.map((att) => {
+        let currentAtt = attributes.value.filter((item) => 
+          item.name == att.name)[0];
+        return {
+          id: currentAtt.id,
+          name: currentAtt.name,
+          percent: att.percent
+        }
+      })
+      addActivity({
+        name: newActivity.value.name,
+        attributes: [...newAttributes],
+      });
+      clearNewActivity();
+    };
+
+    const clearNewActivity = () => {
+      newActivity.value = { name: "", attributes: [] };
+      showForm.value = false;
+    };
+
+    return {
+      user,
+      activities,
+      showForm,
+      handleCreateActivity,
+      newActivity,
+      clearNewActivity,
+      attributes,
+      addActivity
+    };
+  },
+};
+</script>
+
+<style></style>

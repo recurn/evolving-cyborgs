@@ -11,6 +11,17 @@
             />
           </div>
         </div>
+        <div>Total Times: {{ activity.history.length }}</div>
+        <Button
+          icon="pi pi-check"
+          class="p-button-rounded"
+          @click="
+            () => {
+              handleCheckActivity(activity);
+            }
+          "
+        >
+        </Button>
       </div>
     </div>
   </div>
@@ -57,7 +68,7 @@
 <script>
 import getUser from "@/composables/getUser";
 import Button from "primevue/button";
-//import getDocument from "@/composables/getDocument";
+import useDocument from "@/composables/useDocument";
 import useCollection from "@/composables/useCollection";
 import getCollection from "@/composables/getCollection";
 import { getCurrentInstance, ref } from "@vue/runtime-core";
@@ -91,17 +102,19 @@ export default {
     const newActivity = ref({ name: "", attributes: [] });
     const handleCreateActivity = () => {
       let newAttributes = newActivity.value.attributes.map((att) => {
-        let currentAtt = attributes.value.filter((item) => 
-          item.name == att.name)[0];
+        let currentAtt = attributes.value.filter(
+          (item) => item.name == att.name
+        )[0];
         return {
           id: currentAtt.id,
           name: currentAtt.name,
-          percent: att.percent
-        }
-      })
+          percent: att.percent,
+        };
+      });
       addActivity({
         name: newActivity.value.name,
         attributes: [...newAttributes],
+        history: [],
       });
       clearNewActivity();
     };
@@ -109,6 +122,38 @@ export default {
     const clearNewActivity = () => {
       newActivity.value = { name: "", attributes: [] };
       showForm.value = false;
+    };
+
+    const handleCheckActivity = (activity) => {
+      const { updateDoc: updateActivity } = useDocument(
+        "users/" + user.value.uid + "/activities",
+        activity.id
+      );
+      let now = new Date();
+      let newHistory = activity.history;
+      newHistory.push({
+        time: now.toString(),
+        comment: "",
+      });
+
+      updateActivity({
+        history: newHistory,
+      });
+
+      let xp = 100
+
+      emitter.emit("addXp", {
+        xp: xp,
+        message: `For completing ${activity.name}`
+      });
+
+      activity.attributes.forEach((att) => {
+        let attribute = attributes.value.find((a) => a.name == att.name);
+        emitter.emit("addStatXp", {
+          xp: (xp * att.percent) / 100,
+          stat: attribute,
+        });
+      });
     };
 
     return {
@@ -119,7 +164,8 @@ export default {
       newActivity,
       clearNewActivity,
       attributes,
-      addActivity
+      addActivity,
+      handleCheckActivity,
     };
   },
 };

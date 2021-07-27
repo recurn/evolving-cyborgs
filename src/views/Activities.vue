@@ -83,7 +83,6 @@ export default {
     const { documents: attributes } = getCollection(
       "users/" + user.value.uid + "/attributes"
     );
-    console.log(attributes);
 
     const { addDoc: addActivity } = useCollection(
       "users/" + user.value.uid + "/activities"

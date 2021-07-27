@@ -62,6 +62,7 @@ export default {
             },
             { label: "Friends", icon: "pi pi-heart", to: "/friends", command: () => {visibleRight.value = false;} },
             { label: "Attributes", icon: "pi pi-id-card", to: "/attributes", command: () => {visibleRight.value = false;} },
+            { label: "Activities", icon: "pi pi-palette", to: "/activities", command: () => {visibleRight.value = false;} },
           ],
         },
       ],)
